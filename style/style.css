@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
+
+body {
+    background-color: #242424;
+    color: #ddd;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.main {
+    background-color: #393939;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid #666;
+    border-radius: 15px;
+    padding: 10px;
+    max-width: 400px;
+    width: calc(100% - 30px);
+}
+
+.icon-button {
+    font-size: x-large;
+    font-family: "Material Symbols Outlined";
+    background: transparent;
+    color: white;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.icon-button:hover {
+    color:#50d3ff;
+}
+
+.delete-button:hover {
+    background-color: #ff505044;
+    color: #ff7474;
+}
+
+.rotate-on-hover:hover {
+    animation: rotate-text 0.5s ease-in-out forwards;
+}
+
+.pencil-rotate-on-hover:hover{
+    animation: pencil-rotate 0.8s ease-in-out forwards;
+}
+
+.todo-item {
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.todo-item label {
+    flex: 1;
+    margin-left: 10px;
+}
+
+.button-div {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #666;
+    border-radius: 50%;
+    background-color: #00000000;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s, border 0.3s;
+}
+
+input[type="checkbox"]:hover {
+    border: 2px solid #50d3ff;
+}
+
+input[type="checkbox"]:checked {
+    animation: pop 0.5s cubic-bezier(0.25, 1.25, 0.5, 1);
+    background-color: #50d3ff;
+    border-color: #50d3ff;
+}
+
+.title-box {
+    background-color: transparent;
+    color: white;
+    font-size: x-large;
+    border: none;
+    outline: none;
+    width: calc(100% - 5px);
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.title-box:hover {
+    background-color: #666;
+}
+
+@keyframes pop {
+    0% { transform: scale(0.4); }
+    50% { transform: scale(1.5); }
+    100% { transform: scale(1.0); }
+}
+
+@keyframes rotate-text {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pencil-rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(-15deg);
+    }
+    50% {
+        transform: rotate(15deg);
+    }
+    75% {
+        transform: rotate(-10deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
