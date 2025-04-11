@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0');
 
 body {
     background-color: #242424;
@@ -16,8 +16,47 @@ body {
     border-radius: 15px;
     padding: 10px;
     max-width: 400px;
-    width: calc(100% - 30px);
+    width: calc(100% - 40px);
+
+    transition: width 1s, height 1s, background-color 1s, border-color 1s;
 }
+
+.button-bar {
+    display: flex;
+    gap: 5px;
+    transition: gap 1s;
+}
+
+@media screen and (max-width: 700px) {
+    body {
+        font-size: large;
+    }
+
+    .main {
+        height: calc(100% - 50px);
+        max-width: initial;
+        background-color: transparent;
+        border-color: transparent;
+    }
+
+    .button-bar {
+        position: fixed;
+        bottom: 0px;
+        width: calc(100% - 30px);
+        padding: 20px 0px;
+        justify-content: end;
+        gap: 30px
+    }
+
+    .title-box {
+        margin-bottom: 20px;
+        margin-top: 10px;
+    }
+
+    .todo-item {
+        padding-bottom: 20px;
+    }
+} 
 
 .icon-button {
     font-size: x-large;
@@ -28,11 +67,12 @@ body {
     outline: none;
     cursor: pointer;
     border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
 }
 
-.icon-button:hover {
+.edit-button:hover {
     color:#50d3ff;
+    animation: pencil-rotate 0.8s ease-in-out forwards;
 }
 
 .delete-button:hover {
@@ -40,12 +80,19 @@ body {
     color: #ff7474;
 }
 
-.rotate-on-hover:hover {
-    animation: rotate-text 0.5s ease-in-out forwards;
+.create-button:hover {
+    color:#50ff99;
+    animation: rotate-text 0.5s ease-in-out;
 }
 
-.pencil-rotate-on-hover:hover{
-    animation: pencil-rotate 0.8s ease-in-out forwards;
+.move-up-button:hover {
+    color:#50d3ff;
+    transform: translateY(-5px);
+}
+
+.move-down-button:hover {
+    color:#50d3ff;
+    transform: translateY(5px);
 }
 
 .todo-item {
@@ -53,6 +100,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    transition: padding 1s;
 }
 
 .todo-item label {
@@ -67,6 +115,7 @@ body {
 }
 
 input[type="checkbox"] {
+    animation: pop-in 0.5s cubic-bezier(0.25, 1.25, 1, 1);;
     appearance: none;
     width: 18px;
     height: 18px;
@@ -76,15 +125,16 @@ input[type="checkbox"] {
     display: inline-block;
     position: relative;
     cursor: pointer;
-    transition: background-color 0.3s, border 0.3s;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 input[type="checkbox"]:hover {
-    border: 2px solid #50d3ff;
+    border-color: #50d3ff;
+    border-width: 2px;
 }
 
 input[type="checkbox"]:checked {
-    animation: pop 0.5s cubic-bezier(0.25, 1.25, 0.5, 1);
+    animation: pop-out 0.5s cubic-bezier(0.25, 1.25, 0.5, 1);
     background-color: #50d3ff;
     border-color: #50d3ff;
 }
@@ -92,19 +142,25 @@ input[type="checkbox"]:checked {
 .title-box {
     background-color: transparent;
     color: white;
-    font-size: x-large;
+    font-size: large;
     border: none;
     outline: none;
     width: calc(100% - 5px);
     border-radius: 5px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, margin-bottom 1s;
 }
 
 .title-box:hover {
     background-color: #666;
 }
 
-@keyframes pop {
+@keyframes pop-in {
+    0% { transform: scale(0.8); }
+    50% { transform: scale(0.2); }
+    100% { transform: scale(1.0); }
+}
+
+@keyframes pop-out {
     0% { transform: scale(0.4); }
     50% { transform: scale(1.5); }
     100% { transform: scale(1.0); }

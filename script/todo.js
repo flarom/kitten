@@ -24,7 +24,7 @@ function createItem(task = "", checked = false) {
     btnDiv.className = "button-div";
 
     const editBtn = document.createElement("button");
-    editBtn.className = "icon-button pencil-rotate-on-hover";
+    editBtn.className = "icon-button edit-button";
     editBtn.textContent = "edit";
     editBtn.title = "Edit";
     editBtn.onclick = () => updateItem(itemId);
@@ -96,6 +96,28 @@ function load() {
             createItem(task, checked);
         }
     });
+}
+
+function moveCheckedToTop() {
+    const items = Array.from(list.querySelectorAll(".todo-item"));
+    const checkedItems = items.filter(item => item.querySelector("input[type='checkbox']").checked);
+    const uncheckedItems = items.filter(item => !item.querySelector("input[type='checkbox']").checked);
+
+    list.innerHTML = ""; // Limpa a lista
+    checkedItems.forEach(item => list.appendChild(item)); // Adiciona os itens marcados no topo
+    uncheckedItems.forEach(item => list.appendChild(item)); // Adiciona os itens desmarcados abaixo
+    save();
+}
+
+function moveUncheckedToTop() {
+    const items = Array.from(list.querySelectorAll(".todo-item"));
+    const checkedItems = items.filter(item => item.querySelector("input[type='checkbox']").checked);
+    const uncheckedItems = items.filter(item => !item.querySelector("input[type='checkbox']").checked);
+
+    list.innerHTML = ""; // Limpa a lista
+    uncheckedItems.forEach(item => list.appendChild(item)); // Adiciona os itens desmarcados no topo
+    checkedItems.forEach(item => list.appendChild(item)); // Adiciona os itens marcados abaixo
+    save();
 }
 
 load();

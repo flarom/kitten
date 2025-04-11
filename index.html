@@ -12,10 +12,15 @@
     <div class="main">
         <input type="text" id="list-title" value="Tasklist name" class="title-box" oninput="save()">
         <div id="list"></div>
-        <button onclick="createItem()" class="icon-button rotate-on-hover" title="Create new item">add</button>
+        <div class="button-bar">
+            <button onclick="createItem()" class="icon-button create-button" title="Create new item (Ctrl+Q)">add</button>
+            <button onclick="moveCheckedToTop()" class="icon-button move-up-button" title="Move checked items to the top">keyboard_arrow_up</button>
+            <button onclick="moveUncheckedToTop()" class="icon-button move-down-button" title="Move checked items to the bottom">keyboard_arrow_down</button>
+        </div>
     </div>
 
     <script src="script/todo.js"></script>
+    <script src="script/shortcuts.js"></script>
 </body>
 
 </html>
