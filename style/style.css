@@ -80,6 +80,8 @@ body {
 .todo-item label {
     flex: 1;
     margin-left: 10px;
+    max-width: calc(100% - 30px);
+    overflow: scroll;
 }
 
 .button-div {
