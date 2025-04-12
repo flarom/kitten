@@ -152,7 +152,7 @@ input[type="checkbox"]:checked {
         width: calc(100% - 30px);
         padding: 20px 0px;
         justify-content: end;
-        gap: 30px
+        gap: 20px
     }
 
     .title-box {
