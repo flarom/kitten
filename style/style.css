@@ -161,8 +161,8 @@ input[type="checkbox"]:checked {
     .create-button {
         background: #50ff9933;
         color: #50ff99;
-        width: 48px;
-        height: 48px;
+        width: 64px;
+        height: 64px;
         border-radius: 50%;
     }
 } 
