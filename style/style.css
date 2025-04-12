@@ -44,6 +44,10 @@ body {
     transition: background-color 0.3s, color 0.3s, transform 0.3s;
 }
 
+.icon-button:hover {
+    color:#50d3ff;
+}
+
 .edit-button:hover {
     color:#50d3ff;
     animation: pencil-rotate 0.8s ease-in-out forwards;

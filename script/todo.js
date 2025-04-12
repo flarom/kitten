@@ -98,14 +98,28 @@ function load() {
     });
 }
 
+function sortItemsAlphabetically() {
+    const items = Array.from(list.querySelectorAll(".todo-item"));
+
+    items.sort((a, b) => {
+        const textA = a.querySelector("label").textContent.trim().toLowerCase();
+        const textB = b.querySelector("label").textContent.trim().toLowerCase();
+        return textA.localeCompare(textB);
+    });
+
+    list.innerHTML = "";
+    items.forEach(item => list.appendChild(item));
+    save();
+}
+
 function moveCheckedToTop() {
     const items = Array.from(list.querySelectorAll(".todo-item"));
     const checkedItems = items.filter(item => item.querySelector("input[type='checkbox']").checked);
     const uncheckedItems = items.filter(item => !item.querySelector("input[type='checkbox']").checked);
 
-    list.innerHTML = ""; // Limpa a lista
-    checkedItems.forEach(item => list.appendChild(item)); // Adiciona os itens marcados no topo
-    uncheckedItems.forEach(item => list.appendChild(item)); // Adiciona os itens desmarcados abaixo
+    list.innerHTML = "";
+    checkedItems.forEach(item => list.appendChild(item));
+    uncheckedItems.forEach(item => list.appendChild(item));
     save();
 }
 
@@ -114,9 +128,9 @@ function moveUncheckedToTop() {
     const checkedItems = items.filter(item => item.querySelector("input[type='checkbox']").checked);
     const uncheckedItems = items.filter(item => !item.querySelector("input[type='checkbox']").checked);
 
-    list.innerHTML = ""; // Limpa a lista
-    uncheckedItems.forEach(item => list.appendChild(item)); // Adiciona os itens desmarcados no topo
-    checkedItems.forEach(item => list.appendChild(item)); // Adiciona os itens marcados abaixo
+    list.innerHTML = "";
+    uncheckedItems.forEach(item => list.appendChild(item));
+    checkedItems.forEach(item => list.appendChild(item));
     save();
 }
 
