@@ -32,8 +32,10 @@ function applySavedPalette() {
         "--success-back",
         "--warning-back",
         "--font",
+        "--font-size",
         "--wallpaper",
-        "--wallpaper-blur"
+        "--wallpaper-blur",
+        "--wallpaper-brightness"
     ];
 
     paletteVars.forEach(name => {

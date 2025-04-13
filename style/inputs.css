@@ -34,6 +34,16 @@ input[type="text"] {
     padding-left: 20px;
     padding-right: 20px;
     outline: none;
+    margin-bottom: 5px;
+    font-family: var(--font);
+}
+
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+input[type="text"] {
     width: 50%;
 }
 
@@ -68,6 +78,7 @@ input[type="range"] {
     border-radius: 5px;
     outline: none;
     transition: background 0.3s;
+    margin-bottom: 15px;
 }
 
 input[type="range"]:hover {

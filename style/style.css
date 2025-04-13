@@ -10,7 +10,6 @@ body {
     background-position: center;
     background-attachment: fixed;
 }
-
 body::before {
     content: "";
     position: fixed;
@@ -22,7 +21,7 @@ body::before {
     background-size: inherit;
     background-position: inherit;
     background-attachment: inherit;
-    filter: blur(var(--wallpaper-blur));
+    filter: blur(var(--wallpaper-blur)) brightness(var(--wallpaper-brightness)) ;
     z-index: -1;
 }
 
@@ -41,11 +40,11 @@ h1,h2 {
 }
 
 h1 {
-    font-size: 1.5em;
+    font-size: calc(1.5em * var(--font-size));
 }
 
 h2 {
-    font-size: 1.1em;
+    font-size: calc(1.1em * var(--font-size));
 }
 
 .main {
@@ -84,12 +83,12 @@ details summary {
     margin-bottom: 10px;
     cursor: pointer;
     transition: color 0.3s, background-color 0.3s;
-    border-radius: 5px;
+    border-radius: 10px;
     padding: 5px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 1em;
+    font-size: calc(1em * var(--font-size));
 }
 
 details summary div {
@@ -116,6 +115,7 @@ details summary:hover {
 
 a {
     color: var(--highlight-color);
+    font-size: calc(1em * var(--font-size));
     text-decoration: none;
     border-radius: 3px;
 
@@ -126,7 +126,6 @@ a {
 
     outline: none;
     border: none;
-    font-size: medium;
     cursor: pointer;
     padding-left: 0px;
     padding-right: 0px;
@@ -143,12 +142,17 @@ hr {
     border-bottom: 1px solid var(--border-color);
 }
 
+.large-icon,
 .icon {
     font-size: large;
     font-family: "Material Symbols Outlined";
     display: inline-flex;
     align-items: center;
     justify-content: center;
+}
+
+.large-icon {
+    font-size: xx-large;
 }
 
 button {
@@ -200,6 +204,10 @@ button {
     overflow: scroll;
 }
 
+label {
+    font-size: calc(1em * var(--font-size));
+}
+
 .button-div {
     display: flex;
     justify-content: flex-end;
@@ -235,7 +243,7 @@ input[type="checkbox"]:checked {
     background-color: transparent;
     color: var(--title-color);
     font-family: var(--font);
-    font-size: large;
+    font-size: calc(1.1em * var(--font-size));
     border: none;
     outline: none;
     width: calc(100% - 5px);
@@ -250,7 +258,7 @@ input[type="checkbox"]:checked {
 
 @media screen and (max-width: 700px) {
     body {
-        font-size: large;
+        font-size: calc(1.1em * var(--font-size));
     }
 
     .main {
