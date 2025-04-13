@@ -78,6 +78,8 @@ function save() {
     localStorage.setItem("todoMarkdown", markdown);
     localStorage.setItem("todoTitle", listTitle.value);
     localStorage.setItem("todoMarkdown", markdown);
+
+    updateProgressBar();
 }
 
 function load() {
@@ -99,6 +101,7 @@ function load() {
             createItem(task, checked);
         }
     });
+    updateProgressBar()
 }
 
 function sortItemsAlphabetically() {
@@ -188,6 +191,35 @@ function importTasks(event) {
     };
 
     reader.readAsText(file);
+}
+
+function updateProgressBar() {
+    const pb = document.getElementById('progress-bar'); // customizada com <div>
+    const total = getTotalItems();
+    const done = getCompletedItems();
+
+    if (pb && total > 0) {
+        const percent = (done / total) * 100;
+        pb.style.width = `${percent}%`;
+
+        if (percent === 100) {
+            pb.style.backgroundColor = "var(--success-color)";
+        } else {
+            pb.style.backgroundColor = "var(--highlight-color)";
+        }
+    }
+}
+
+function getTotalItems() {
+    return list.querySelectorAll(".todo-item").length;
+}
+
+function getCompletedItems() {
+    return list.querySelectorAll(".todo-item input[type='checkbox']:checked").length;
+}
+
+function getIncompleteItems() {
+    return list.querySelectorAll(".todo-item input[type='checkbox']:not(:checked)").length;
 }
 
 load();

@@ -256,7 +256,7 @@ input[type="checkbox"]:checked {
     background-color: var(--field-color);
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 800px) {
     body {
         font-size: calc(1.1em * var(--font-size));
     }
