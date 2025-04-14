@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="style/palette.css">
     <link rel="stylesheet" href="style/containers.css">
     <link rel="stylesheet" href="style/inputs.css">
+    <link rel="shortcut icon" href="resource/brading/light-tiny.png" type="image/x-icon">
 </head>
 
 <body>
@@ -60,12 +61,8 @@
                 <label for="--highlight-color">Highlight color</label>
             </div>
             <div class="center-flex">
-                <input type="color" value="#50ff99" name="--success-color" id="--success-color">
-                <label for="--success-color">Create button color</label>
-            </div>
-            <div class="center-flex">
                 <input type="color" value="#ff7474" name="--warning-color" id="--warning-color">
-                <label for="--warning-color">Delete button color</label>
+                <label for="--warning-color">Warning color</label>
             </div>
         </details>
 
@@ -113,6 +110,24 @@
             <button class="danger-button" data-action="clearTasks()" title="Clear todo list [hold]">Clear</button>
         </details>
 
+        <hr>
+
+        <h2>About</h2>
+        <details name="settings">
+            <summary><span class="center-flex"><span class="large-icon">info</span>About Kitten</span></summary>
+            <div class="center-flex break-on-mobile">
+                <img src="resource/brading/light-full.png" width="50%" alt="">
+                <div>
+                    <h3>Kitten</h3>
+                    <p>Kitten is an <b>accountless</b>, <b>free</b> and <b>opensource</b> tasklist manager.</p>
+                    <ul>
+                        <li><a href="https://github.com/flarom/kitten/blob/main/README.md">Documentation</a></li>
+                        <li><a href="https://github.com/flarom/kitten/">GitHub Repository</a></li>
+                    </ul>
+                </div>
+            </div>
+        </details>
+
         <script src="script/settings.js"></script>
         <script src="script/todo.js"></script>
         <script src="script/dangerbuttons.js"></script>
@@ -127,7 +142,6 @@
                     '--icon-color',
                     '--title-color',
                     '--highlight-color',
-                    '--success-color',
                     '--warning-color'
                 ];
 
@@ -139,11 +153,9 @@
                 });
 
                 const highlightColor = document.getElementById('--highlight-color').value;
-                const successColor = document.getElementById('--success-color').value;
                 const warningColor = document.getElementById('--warning-color').value;
 
                 saveItem('--highlight-back', `${highlightColor}44`);
-                saveItem('--success-back', `${successColor}44`);
                 saveItem('--warning-back', `${warningColor}44`);
             }
             function loadPaletteIntoInputs() {
@@ -156,7 +168,6 @@
                     '--icon-color',
                     '--title-color',
                     '--highlight-color',
-                    '--success-color',
                     '--warning-color'
                 ];
 

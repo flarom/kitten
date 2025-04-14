@@ -56,7 +56,7 @@ h2 {
     border: 1px solid var(--border-color);
     border-radius: 15px;
     padding: 10px;
-    max-width: 400px;
+    max-width: 800px;
     width: calc(100% - 40px);
 
     transition: width 1s, height 1s, background-color 1s, border-color 1s;
@@ -185,7 +185,12 @@ button {
 }
 
 .create-button:hover {
-    color:var(--success-color);
+    color:var(--highlight-color);
+    animation: rotate-text 0.5s ease-in-out;
+}
+
+.add-subitem-button:hover {
+    color:var(--highlight-color);
     animation: rotate-text 0.5s ease-in-out;
 }
 
@@ -198,6 +203,11 @@ button {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-radius: 5px;
+}
+
+.todo-item-content:hover {
+    background-color: var(--field-color);
 }
 
 .subitem-container {
@@ -207,19 +217,39 @@ button {
 }
 
 .todo-subitem {
-    margin-left: 0;
-    display: flex;
     border-left: 1px solid var(--border-color);
+    display: flex;
     align-items: center;
-    justify-content: space-between;
     margin-left: 12px;
     padding-left: 15px;
 }
-.todo-item label {
+
+.todo-subitem .todo-item-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.todo-subitem .button-div {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+.todo-subitem label {
     flex: 1;
     margin-left: 10px;
     max-width: calc(100% - 30px);
-    overflow: scroll;
+    overflow: hidden;
+}
+
+.todo-subitem label,
+.todo-item-content label {
+    flex: 1;
+    margin-left: 10px;
+    max-width: calc(100% - 30px);
+    overflow: hidden;
 }
 
 label {
@@ -305,8 +335,8 @@ input[type="checkbox"]:checked {
     }
 
     .create-button {
-        background: var(--success-back);
-        color: var(--success-color);
+        background: var(--highlight-back);
+        color: var(--highlight-color);
         width: 64px;
         height: 64px;
         border-radius: 50%;

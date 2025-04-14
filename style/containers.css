@@ -4,6 +4,16 @@
     gap: 5px;
 }
 
+.break-on-mobile {
+    display: flex;
+}
+
+@media screen and (max-width: 800px) {
+    .break-on-mobile {
+        display: block;
+    }
+}
+
 /* PC only content */
 .pc-only {
     display: inline;
