@@ -8,15 +8,11 @@
     --title-color: #ffffff;
     --highlight-color: #50d3ff;
     --highlight-back: #50d3ff44;
-    --success-color: #50ff99;
-    --success-back: #50ff9944;
     --warning-color: #ff7474;
     --warning-back: #ff505044;
 
     --font: 'Verdana';
-    --font-size: 1;
 
     --wallpaper: url('');
     --wallpaper-blur: 0px;
-    --wallpaper-brightness: 100%;
 }

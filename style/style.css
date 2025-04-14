@@ -429,3 +429,25 @@ button.danger-button:active {
     75%  { transform: translate(-2px, 0px) ; }
     100% { transform: translate(2px , 2px) ; }
 }
+
+/* __ SCROLL BARS _____________________________________________________________ */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--border-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) transparent;
+}
