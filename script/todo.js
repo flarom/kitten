@@ -2,15 +2,18 @@ const list = document.getElementById("list");
 const listTitle = document.getElementById("list-title");
 let currentId = 0;
 
-function createItem(task = "", checked = false) {
-    if (!task) task = prompt("New item:");
+function createItem(task = "", checked = false, isSubItem = false, parentDiv = null) {
+    if (!task) task = prompt(isSubItem ? "New subitem:" : "New item:");
     if (!task) return;
 
     const itemId = `listItem${currentId++}`;
 
     const item = document.createElement("div");
     item.id = itemId;
-    item.className = "todo-item";
+    item.className = isSubItem ? "todo-subitem" : "todo-item";
+
+    const itemContent = document.createElement("div");
+    itemContent.className = "todo-item-content";
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
@@ -23,6 +26,17 @@ function createItem(task = "", checked = false) {
 
     const btnDiv = document.createElement("div");
     btnDiv.className = "button-div";
+
+    if (!isSubItem) {
+        const addSubItemBtn = document.createElement("button");
+        addSubItemBtn.className = "icon-button add-subitem-button";
+        addSubItemBtn.textContent = "add";
+        addSubItemBtn.title = "Add Subitem";
+        addSubItemBtn.setAttribute("translate", "no");
+        addSubItemBtn.onclick = () => createItem("", false, true, item);
+
+        btnDiv.appendChild(addSubItemBtn);
+    }
 
     const editBtn = document.createElement("button");
     editBtn.className = "icon-button edit-button";
@@ -41,14 +55,27 @@ function createItem(task = "", checked = false) {
     btnDiv.appendChild(editBtn);
     btnDiv.appendChild(delBtn);
 
-    item.appendChild(checkbox);
-    item.appendChild(label);
-    item.appendChild(btnDiv);
+    itemContent.appendChild(checkbox);
+    itemContent.appendChild(label);
+    itemContent.appendChild(btnDiv);
 
-    list.appendChild(item);
+    item.appendChild(itemContent);
+
+    if (isSubItem && parentDiv) {
+        let subItemContainer = parentDiv.querySelector(".subitem-container");
+        if (!subItemContainer) {
+            subItemContainer = document.createElement("div");
+            subItemContainer.className = "subitem-container";
+            parentDiv.appendChild(subItemContainer);
+        }
+        subItemContainer.appendChild(item);
+    } else {
+        list.appendChild(item);
+    }
+
     save();
+    return item;
 }
-
 function updateItem(id) {
     const item = document.getElementById(id);
     const label = item.querySelector("label");
@@ -73,11 +100,17 @@ function save() {
         const checkbox = item.querySelector("input[type='checkbox']");
         const label = item.querySelector("label").textContent.trim();
         markdown += checkbox.checked ? `- [x] ${label}\n` : `- [ ] ${label}\n`;
+
+        const subItems = item.querySelectorAll(".todo-subitem");
+        subItems.forEach(subItem => {
+            const subCheckbox = subItem.querySelector("input[type='checkbox']");
+            const subLabel = subItem.querySelector("label").textContent.trim();
+            markdown += subCheckbox.checked ? `    - [x] ${subLabel}\n` : `    - [ ] ${subLabel}\n`;
+        });
     });
 
     localStorage.setItem("todoMarkdown", markdown);
     localStorage.setItem("todoTitle", listTitle.value);
-    localStorage.setItem("todoMarkdown", markdown);
 
     updateProgressBar();
 }
@@ -92,16 +125,24 @@ function load() {
     if (!markdown) return;
 
     const lines = markdown.trim().split("\n");
+    let currentParent = null;
 
     lines.forEach(line => {
-        const match = line.match(/- \[(x| )\] (.+)/);
+        const match = line.match(/^( {4})?- \[(x| )\] (.+)/);
         if (match) {
-            const checked = match[1] === "x";
-            const task = match[2];
-            createItem(task, checked);
+            const isSubItem = !!match[1];
+            const checked = match[2] === "x";
+            const task = match[3];
+
+            if (isSubItem && currentParent) {
+                createItem(task, checked, true, currentParent);
+            } else {
+                currentParent = createItem(task, checked);
+            }
         }
     });
-    updateProgressBar()
+
+    updateProgressBar();
 }
 
 function sortItemsAlphabetically() {

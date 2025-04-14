@@ -191,12 +191,30 @@ button {
 
 .todo-item {
     margin: 5px 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     transition: padding 1s;
 }
 
+.todo-item-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.subitem-container {
+    margin-left: 0;
+    padding-left: 0;
+    display: block;
+}
+
+.todo-subitem {
+    margin-left: 0;
+    display: flex;
+    border-left: 1px solid var(--border-color);
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 12px;
+    padding-left: 15px;
+}
 .todo-item label {
     flex: 1;
     margin-left: 10px;
