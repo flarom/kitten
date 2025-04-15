@@ -42,7 +42,7 @@
                     <option value="" disabled>__ Light __________________________________</option>
                     <option value="github-light">GitHub Light</option>
                     <option value="ocean-breeze">Ocean Breeze</option>
-                    <option value="sakura-blossom">Sakua Blossom</option>
+                    <option value="sakura-blossom">Sakura Blossom</option>
 
                     <option value="" disabled>__ Special ________________________________</option>
                     <option value="hatsune-miku">Hatsune Miku</option>
@@ -125,9 +125,9 @@
         <hr>
 
         <h2>Data</h2>
-        <!-- my task list --------------------------------------------------------------------------->
+        <!-- task list --------------------------------------------------------------------------->
         <details name="setting">
-            <summary><span class="center-flex"><span class="large-icon">checklist</span>My task list</span></summary>
+            <summary><span class="center-flex"><span class="large-icon">checklist</span>Manage task list</span></summary>
             <button class="text-button" onclick="exportTasks()">Export Markdown</button>
             <button class="text-button">
                 <label for="import-file" style="cursor: pointer;">Import Markdown</label>
@@ -135,7 +135,11 @@
             </button>
             <button class="danger-button" data-action="clearTasks()" title="Clear todo list [hold]">Clear</button>
         </details>
-
+        <!-- settings ---------------------------------------------------------------------------->
+        <details name="setting">
+            <summary><span class="center-flex"><span class="large-icon">settings</span>Manage settings</span></summary>
+            <button class="danger-button" data-action="clearSettings()" title="Clear settings [hold]">Clear</button>
+        </details>
         <hr>
 
         <h2>About</h2>
@@ -163,6 +167,7 @@
                 const selectedTheme = themeSelector.value;
 
                 const themes = {
+                    // dark themes
                     'kitten': {
                         '--background-color': '#242424',
                         '--card-color': '#393939',
@@ -173,39 +178,6 @@
                         '--title-color': '#ffffff',
                         '--highlight-color': '#50d3ff',
                         '--warning-color': '#ff7474'
-                    },
-                    'github-dark': {
-                        '--background-color': '#0d1117',
-                        '--card-color': '#161b22',
-                        '--field-color': '#21262d',
-                        '--border-color': '#30363d',
-                        '--text-color': '#c9d1d9',
-                        '--icon-color': '#f0f6fc',
-                        '--title-color': '#f0f6fc',
-                        '--highlight-color': '#58a6ff',
-                        '--warning-color': '#f85149'
-                    },
-                    'github-light': {
-                        '--background-color': '#ffffff',
-                        '--card-color': '#f6f8fa',
-                        '--field-color': '#eaeef2',
-                        '--border-color': '#d0d7de',
-                        '--text-color': '#24292f',
-                        '--icon-color': '#1b1f23',
-                        '--title-color': '#1b1f23',
-                        '--highlight-color': '#0969da',
-                        '--warning-color': '#cf222e'
-                    },
-                    'monokai': {
-                        '--background-color': '#272822',
-                        '--card-color': '#3e3d32',
-                        '--field-color': '#49483e',
-                        '--border-color': '#75715e',
-                        '--text-color': '#f8f8f2',
-                        '--icon-color': '#f8f8f0',
-                        '--title-color': '#f8f8f0',
-                        '--highlight-color': '#a6e22e',
-                        '--warning-color': '#f92672'
                     },
                     'cyberpunk': {
                         '--background-color': '#0f0f1a',
@@ -218,27 +190,27 @@
                         '--highlight-color': '#50fa7b',
                         '--warning-color': '#ff5555'
                     },
-                    'sakura-blossom': {
-                        '--background-color': '#fff4f6',
-                        '--card-color': '#ffe4ec',
-                        '--field-color': '#ffccd9',
-                        '--border-color': '#ff99aa',
-                        '--text-color': '#4b2c3f',
-                        '--icon-color': '#e91e63',
-                        '--title-color': '#ad1457',
-                        '--highlight-color': '#f48fb1',
-                        '--warning-color': '#d81b60'
+                    'github-dark': {
+                        '--background-color': '#0d1117',
+                        '--card-color': '#161b22',
+                        '--field-color': '#21262d',
+                        '--border-color': '#30363d',
+                        '--text-color': '#c9d1d9',
+                        '--icon-color': '#f0f6fc',
+                        '--title-color': '#f0f6fc',
+                        '--highlight-color': '#58a6ff',
+                        '--warning-color': '#f85149'
                     },
-                    'ocean-breeze': {
-                        '--background-color': '#e0f7fa',
-                        '--card-color': '#b2ebf2',
-                        '--field-color': '#80deea',
-                        '--border-color': '#4dd0e1',
-                        '--text-color': '#004d40',
-                        '--icon-color': '#006064',
-                        '--title-color': '#00796b',
-                        '--highlight-color': '#00bcd4',
-                        '--warning-color': '#d32f2f'
+                    'monokai': {
+                        '--background-color': '#272822',
+                        '--card-color': '#3e3d32',
+                        '--field-color': '#49483e',
+                        '--border-color': '#75715e',
+                        '--text-color': '#f8f8f2',
+                        '--icon-color': '#f8f8f0',
+                        '--title-color': '#f8f8f0',
+                        '--highlight-color': '#a6e22e',
+                        '--warning-color': '#f92672'
                     },
                     'oled': {
                         '--background-color': '#000000',
@@ -251,6 +223,41 @@
                         '--highlight-color': '#00ff88',
                         '--warning-color': '#ff4444'
                     },
+                    // light themes
+                    'github-light': {
+                        '--background-color': '#ffffff',
+                        '--card-color': '#f6f8fa',
+                        '--field-color': '#eaeef2',
+                        '--border-color': '#d0d7de',
+                        '--text-color': '#24292f',
+                        '--icon-color': '#1b1f23',
+                        '--title-color': '#1b1f23',
+                        '--highlight-color': '#0969da',
+                        '--warning-color': '#cf222e'
+                    },
+                    'ocean-breeze': {
+                        '--background-color': '#e0f7fa',
+                        '--card-color': '#b2ebf2',
+                        '--field-color': '#80deea',
+                        '--border-color': '#4dd0e1',
+                        '--text-color': '#004d40',
+                        '--icon-color': '#006064',
+                        '--title-color': '#00796b',
+                        '--highlight-color': '#00bcd4',
+                        '--warning-color': '#d32f2f'
+                    },
+                    'sakura-blossom': {
+                        '--background-color': '#fff4f6',
+                        '--card-color': '#ffe4ec',
+                        '--field-color': '#ffccd9',
+                        '--border-color': '#ff99aa',
+                        '--text-color': '#4b2c3f',
+                        '--icon-color': '#e91e63',
+                        '--title-color': '#ad1457',
+                        '--highlight-color': '#f48fb1',
+                        '--warning-color': '#d81b60'
+                    },
+                    // special themes :3
                     'hatsune-miku': {
                         '--background-color': '#1b1f27',
                         '--card-color': '#22303c',

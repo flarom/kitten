@@ -67,3 +67,32 @@ function resetPallete() {
 }
 
 document.addEventListener("DOMContentLoaded", applySavedPalette);
+
+
+function clearSettings() {
+    const settingsKeys = [
+        "--background-color",
+        "--card-color",
+        "--field-color",
+        "--border-color",
+        "--text-color",
+        "--icon-color",
+        "--title-color",
+        "--highlight-color",
+        "--highlight-back",
+        "--warning-color",
+        "--warning-back",
+        "--font",
+        "--font-size",
+        "--wallpaper",
+        "--wallpaper-blur",
+        "--wallpaper-brightness"
+    ];
+
+    settingsKeys.forEach(key => {
+        localStorage.removeItem(key);
+        document.documentElement.style.removeProperty(key);
+    });
+
+    location.reload();
+}

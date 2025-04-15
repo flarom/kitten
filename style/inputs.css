@@ -54,7 +54,7 @@ input[type="search"]:focus,
 input[type="tel"]:focus,
 input[type="url"]:focus,
 input[type="text"]:focus {
-    border-bottom: 2px solid var(--highlight-color);
+    border-color: var(--highlight-color);
 }
 
 select {
@@ -66,6 +66,12 @@ select {
     outline: none;
     width: 50%;
     font-family: var(--font);
+    transition: 0.3s background-color, 0.3s border-color;
+}
+
+select:hover {
+    background-color: var(--highlight-back);
+    border-color: var(--highlight-color);
 }
 
 /* range */
@@ -94,7 +100,7 @@ input[type="range"]::-webkit-slider-thumb {
     background: var(--highlight-color);
     cursor: e-resize;
     border: 2px solid var(--card-color);
-    transition: background 0.3s, transform 0.2s;
+    transition: background 0.3s, transform 0.3s;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
@@ -109,7 +115,7 @@ input[type="range"]::-moz-range-thumb {
     background: var(--highlight-color);
     cursor: e-resize;
     border: 2px solid var(--card-color);
-    transition: background 0.3s, transform 0.2s;
+    transition: background 0.3s, transform 0.3s;
 }
 
 input[type="range"]::-moz-range-thumb:hover {
