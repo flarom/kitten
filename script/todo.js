@@ -2,6 +2,14 @@ const list = document.getElementById("list");
 const listTitle = document.getElementById("list-title");
 let currentId = 0;
 
+/**
+ * Creates a new todo item or subitem.
+ * @param {string} [task=""] - The task description.
+ * @param {boolean} [checked=false] - Whether the item is checked.
+ * @param {boolean} [isSubItem=false] - Whether the item is a subitem.
+ * @param {HTMLElement|null} [parentDiv=null] - The parent element for subitems.
+ * @returns {HTMLElement|undefined} - The created item element.
+ */
 function createItem(task = "", checked = false, isSubItem = false, parentDiv = null) {
     if (!task) task = prompt(isSubItem ? "New subitem:" : "New item:");
     if (!task) return;
@@ -76,6 +84,11 @@ function createItem(task = "", checked = false, isSubItem = false, parentDiv = n
     save();
     return item;
 }
+
+/**
+ * Updates the text of an existing todo item.
+ * @param {string} id - The ID of the item to update.
+ */
 function updateItem(id) {
     const item = document.getElementById(id);
     const label = item.querySelector("label");
@@ -86,12 +99,19 @@ function updateItem(id) {
     save();
 }
 
+/**
+ * Deletes a todo item by its ID.
+ * @param {string} id - The ID of the item to delete.
+ */
 function deleteItem(id) {
     const item = document.getElementById(id);
     item.remove();
     save();
 }
 
+/**
+ * Saves the current state of the todo list to localStorage.
+ */
 function save() {
     let markdown = "";
     const items = list.querySelectorAll(".todo-item");
@@ -113,6 +133,9 @@ function save() {
     localStorage.setItem("todoTitle", listTitle.value);
 }
 
+/**
+ * Loads the todo list from localStorage and populates the UI.
+ */
 function load() {
     const savedTitle = localStorage.getItem("todoTitle");
     if (savedTitle) {
@@ -141,6 +164,9 @@ function load() {
     });
 }
 
+/**
+ * Sorts the main todo items alphabetically and their subitems as well.
+ */
 function sortItemsAlphabetically() {
     const items = Array.from(list.querySelectorAll(".todo-item"));
 
@@ -151,38 +177,96 @@ function sortItemsAlphabetically() {
     });
 
     list.innerHTML = "";
-    items.forEach(item => list.appendChild(item));
+    items.forEach(item => {
+        sortSubItems(item);
+        list.appendChild(item);
+    });
     save();
 }
 
+/**
+ * Moves all checked items to the top of the list.
+ */
 function moveCheckedToTop() {
     const items = Array.from(list.querySelectorAll(".todo-item"));
+
+    items.forEach(sortSubItemsByCheckStatus);
+
     const checkedItems = items.filter(item => item.querySelector("input[type='checkbox']").checked);
     const uncheckedItems = items.filter(item => !item.querySelector("input[type='checkbox']").checked);
 
     list.innerHTML = "";
-    checkedItems.forEach(item => list.appendChild(item));
-    uncheckedItems.forEach(item => list.appendChild(item));
+    [...checkedItems, ...uncheckedItems].forEach(item => list.appendChild(item));
+
     save();
 }
 
+/**
+ * Moves all unchecked items to the top of the list.
+ */
 function moveUncheckedToTop() {
     const items = Array.from(list.querySelectorAll(".todo-item"));
+
+    items.forEach(sortSubItemsByCheckStatus);
+
     const checkedItems = items.filter(item => item.querySelector("input[type='checkbox']").checked);
     const uncheckedItems = items.filter(item => !item.querySelector("input[type='checkbox']").checked);
 
     list.innerHTML = "";
-    uncheckedItems.forEach(item => list.appendChild(item));
-    checkedItems.forEach(item => list.appendChild(item));
+    [...uncheckedItems, ...checkedItems].forEach(item => list.appendChild(item));
+
     save();
 }
 
+/**
+ * Sorts the subitems of a parent item by their checked status.
+ * @param {HTMLElement} parentItem - The parent item containing subitems.
+ */
+function sortSubItemsByCheckStatus(parentItem) {
+    const subContainer = parentItem.querySelector(".subitem-container");
+    if (!subContainer) return;
+
+    const subItems = Array.from(subContainer.querySelectorAll(".todo-subitem"));
+
+    const checked = subItems.filter(item => item.querySelector("input[type='checkbox']").checked);
+    const unchecked = subItems.filter(item => !item.querySelector("input[type='checkbox']").checked);
+
+    subContainer.innerHTML = "";
+    [...checked, ...unchecked].forEach(item => subContainer.appendChild(item));
+}
+
+/**
+ * Sorts the subitems of a parent item alphabetically.
+ * @param {HTMLElement} parentItem - The parent item containing subitems.
+ */
+function sortSubItems(parentItem) {
+    const subContainer = parentItem.querySelector(".subitem-container");
+    if (!subContainer) return;
+
+    const subItems = Array.from(subContainer.querySelectorAll(".todo-subitem"));
+
+    subItems.sort((a, b) => {
+        const textA = a.querySelector("label").textContent.trim().toLowerCase();
+        const textB = b.querySelector("label").textContent.trim().toLowerCase();
+        return textA.localeCompare(textB);
+    });
+
+    subContainer.innerHTML = "";
+    subItems.forEach(subItem => subContainer.appendChild(subItem));
+}
+
+/**
+ * Clears all tasks from the todo list and localStorage.
+ */
 function clearTasks() {
     localStorage.removeItem("todoMarkdown");
     localStorage.removeItem("todoTitle");
     window.open('index.html', '_self').focus();
 }
 
+/**
+ * Exports the todo list as a Markdown file.
+ */
 function exportTasks() {
     const markdown = localStorage.getItem("todoMarkdown");
     const title = localStorage.getItem("todoTitle") || "My Todo List";
@@ -203,6 +287,10 @@ function exportTasks() {
     URL.revokeObjectURL(url);
 }
 
+/**
+ * Imports tasks from a Markdown file.
+ * @param {Event} event - The file input change event.
+ */
 function importTasks(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -230,14 +318,26 @@ function importTasks(event) {
     reader.readAsText(file);
 }
 
+/**
+ * Gets the total number of todo items.
+ * @returns {number} - The total number of items.
+ */
 function getTotalItems() {
     return list.querySelectorAll(".todo-item").length;
 }
 
+/**
+ * Gets the number of completed todo items.
+ * @returns {number} - The number of completed items.
+ */
 function getCompletedItems() {
     return list.querySelectorAll(".todo-item input[type='checkbox']:checked").length;
 }
 
+/**
+ * Gets the number of incomplete todo items.
+ * @returns {number} - The number of incomplete items.
+ */
 function getIncompleteItems() {
     return list.querySelectorAll(".todo-item input[type='checkbox']:not(:checked)").length;
 }

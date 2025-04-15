@@ -222,6 +222,7 @@ button {
     align-items: center;
     margin-left: 12px;
     padding-left: 15px;
+    min-height: 31px;
 }
 
 .todo-subitem .todo-item-content {
@@ -232,9 +233,14 @@ button {
 }
 
 .todo-subitem .button-div {
-    display: flex;
+    display: none;
     justify-content: flex-end;
     gap: 5px;
+}
+
+.todo-subitem:active .button-div,
+.todo-subitem:hover .button-div {
+    display: flex;
 }
 
 .todo-subitem label {
