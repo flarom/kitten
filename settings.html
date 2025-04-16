@@ -107,12 +107,12 @@
             <input type="range" name="--wallpaper-brightness" id="--wallpaper-brightness" min="0" max="2" value="1" step="0.1" oninput="saveWallpaper()"><br>
 
             <label for="--wallpaper-position">Position</label><br>
-            <select id="--wallpaper-position" onchange="saveWallpaper()">
+            <select id="--wallpaper-position" onchange="saveWallpaper()" value="center">
                 <option value="center">Center</option>
                 <option value="top">Top</option>
+                <option value="bottom">Bottom</option>
                 <option value="left">Left</option>
                 <option value="right">Right</option>
-                <option value="bottom">Bottom</option>
             </select>
         </details>
 

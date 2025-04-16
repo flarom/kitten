@@ -110,6 +110,7 @@ details summary:hover {
 
 .todo-list {
     max-height: calc(100vh - 100px);
+    min-height: 200px;
     overflow: scroll;
 }
 

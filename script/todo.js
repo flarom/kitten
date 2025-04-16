@@ -133,6 +133,7 @@ function save() {
     localStorage.setItem("todoTitle", listTitle.value);
 
     updateWindowTitle(listTitle.value);
+    updateProgressBar();
 }
 
 /**
@@ -164,6 +165,8 @@ function load() {
             }
         }
     });
+
+    updateProgressBar();
 }
 
 /**
@@ -321,34 +324,56 @@ function importTasks(event) {
 }
 
 /**
- * Gets the total number of todo items.
- * @returns {number} - The total number of items.
+ * Gets the counts of various todo item categories.
+ * @returns {object} - An object containing counts for all requested categories.
  */
-function getTotalItems() {
-    return list.querySelectorAll(".todo-item").length;
+function getTodoCounts() {
+    const allItems = list.querySelectorAll(".todo-item, .todo-subitem");
+    const allCheckedItems = list.querySelectorAll(".todo-item input[type='checkbox']:checked, .todo-subitem input[type='checkbox']:checked");
+    const allUncheckedItems = list.querySelectorAll(".todo-item input[type='checkbox']:not(:checked), .todo-subitem input[type='checkbox']:not(:checked)");
+
+    const parentItems = list.querySelectorAll(".todo-item");
+    const parentCheckedItems = list.querySelectorAll(".todo-item input[type='checkbox']:checked");
+    const parentUncheckedItems = list.querySelectorAll(".todo-item input[type='checkbox']:not(:checked)");
+
+    const childItems = list.querySelectorAll(".todo-subitem");
+    const childCheckedItems = list.querySelectorAll(".todo-subitem input[type='checkbox']:checked");
+    const childUncheckedItems = list.querySelectorAll(".todo-subitem input[type='checkbox']:not(:checked)");
+
+    return {
+        totalItems: allItems.length,
+        totalCheckedItems: allCheckedItems.length,
+        totalUncheckedItems: allUncheckedItems.length,
+        totalParentItems: parentItems.length,
+        totalParentCheckedItems: parentCheckedItems.length,
+        totalParentUncheckedItems: parentUncheckedItems.length,
+        totalChildItems: childItems.length,
+        totalChildCheckedItems: childCheckedItems.length,
+        totalChildUncheckedItems: childUncheckedItems.length
+    };
 }
 
 /**
- * Gets the number of completed todo items.
- * @returns {number} - The number of completed items.
+ * Updates the window title
+ * @param {title} - The title to be set. 
  */
-function getCompletedItems() {
-    return list.querySelectorAll(".todo-item input[type='checkbox']:checked").length;
-}
-
-/**
- * Gets the number of incomplete todo items.
- * @returns {number} - The number of incomplete items.
- */
-function getIncompleteItems() {
-    return list.querySelectorAll(".todo-item input[type='checkbox']:not(:checked)").length;
-}
-
 function updateWindowTitle(title){
     if(title != ""){
         document.title = `${title} - Kitten`;
     } else {
         document.title = "Kitten";
+    }
+}
+
+function updateProgressBar() {
+    const pb = document.getElementById('progress-bar');
+    const total = getTodoCounts().totalParentItems;
+    const done = getTodoCounts().totalParentCheckedItems;
+
+    if (pb && total > 0) {
+        const percent = (done / total) * 100;
+ 
+        pb.style.width = `${percent}%`;
     }
 }
 

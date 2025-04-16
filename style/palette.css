@@ -12,8 +12,10 @@
     --warning-back: #ff505044;
 
     --font: 'Verdana';
+    --font-size: 1;
 
     --wallpaper: url('');
     --wallpaper-blur: 0px;
+    --wallpaper-brightness: 1;
     --wallpaper-position: center;
 }
