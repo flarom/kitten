@@ -84,9 +84,9 @@
             </summary>
             <label for="--font">Typeface</label><br>
             <input type="text" name="--font" id="--font" oninput="saveFont()" placeholder="Try 'monospace', or 'serif'"><br>
+
             <label for="--font-size">Size</label><br>
-            <input type="range" name="--font-size" id="--font-size" min="0.5" max="1.5" value="1" step="0.1"
-                oninput="saveFont()">
+            <input type="range" name="--font-size" id="--font-size" min="0.5" max="1.5" value="1" step="0.1" oninput="saveFont()">
         </details>
 
         <!-- wallpaper ------------------------------------------------------------------------------>
@@ -99,12 +99,21 @@
             </summary>
             <label for="--wallpaper">URL</label><br>
             <input type="url" name="--wallpaper" id="--wallpaper" oninput="saveWallpaper()"><br>
+
             <label for="--wallpaper-blur">Blur</label><br>
-            <input type="range" name="--wallpaper-blur" id="--wallpaper-blur" min="0" max="10" value="0"
-                oninput="saveWallpaper()"><br>
+            <input type="range" name="--wallpaper-blur" id="--wallpaper-blur" min="0" max="10" value="0" oninput="saveWallpaper()"><br>
+
             <label for="--wallpaper-brightness">Brightness</label><br>
-            <input type="range" name="--wallpaper-brightness" id="--wallpaper-brightness" min="0" max="2" value="1"
-                step="0.1" oninput="saveWallpaper()"><br>
+            <input type="range" name="--wallpaper-brightness" id="--wallpaper-brightness" min="0" max="2" value="1" step="0.1" oninput="saveWallpaper()"><br>
+
+            <label for="--wallpaper-position">Position</label><br>
+            <select id="--wallpaper-position" onchange="saveWallpaper()">
+                <option value="center">Center</option>
+                <option value="top">Top</option>
+                <option value="left">Left</option>
+                <option value="right">Right</option>
+                <option value="bottom">Bottom</option>
+            </select>
         </details>
 
         <hr>
@@ -319,10 +328,14 @@
             const wallpaperBrightnessInput = document.getElementById("--wallpaper-brightness");
             wallpaperBrightnessInput.value = loadItem('--wallpaper-brightness');
 
+            const wallpaperPositionInput = document.getElementById('--wallpaper-position');
+            wallpaperPositionInput.value = loadItem('--wallpaper-position');
+
             function saveWallpaper() {
                 saveItem('--wallpaper', `url('${wallpaperInput.value}')`);
                 saveItem('--wallpaper-blur', `${wallpaperBlurInput.value}px`);
                 saveItem('--wallpaper-brightness', wallpaperBrightnessInput.value);
+                saveItem('--wallpaper-position', wallpaperPositionInput.value);
             }
 
             function resetWallpaper() {
