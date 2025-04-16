@@ -374,6 +374,8 @@ function updateProgressBar() {
         const percent = (done / total) * 100;
  
         pb.style.width = `${percent}%`;
+    } else {
+        pb.style.width = `0%`;
     }
 }
 
