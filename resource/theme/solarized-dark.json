@@ -1,0 +1,15 @@
+{
+    "name": "Solarized Dark",
+    "category": "Dark",
+    "variables": {
+      "--background-color": "#002b36",
+      "--card-color": "#073642",
+      "--field-color": "#0a3a4a",
+      "--border-color": "#586e75",
+      "--text-color": "#93a1a1",
+      "--icon-color": "#b58900",
+      "--title-color": "#268bd2",
+      "--highlight-color": "#2aa198",
+      "--warning-color": "#dc322f"
+    }
+  }

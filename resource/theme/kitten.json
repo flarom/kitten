@@ -1,0 +1,15 @@
+{
+    "name": "Kitten (Default)",
+    "category": "Dark",
+    "variables": {
+        "--background-color": "#242424",
+        "--card-color": "#393939",
+        "--field-color": "#464646",
+        "--border-color": "#666666",
+        "--text-color": "#cccccc",
+        "--icon-color": "#ffffff",
+        "--title-color": "#ffffff",
+        "--highlight-color": "#50d3ff",
+        "--warning-color": "#ff7474"
+    }
+}

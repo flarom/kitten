@@ -1,0 +1,15 @@
+{
+    "name": "Sakura Blossom",
+    "category": "Light",
+    "variables": {
+        "--background-color": "#fff4f6",
+        "--card-color": "#ffe4ec",
+        "--field-color": "#ffccd9",
+        "--border-color": "#ff99aa",
+        "--text-color": "#4b2c3f",
+        "--icon-color": "#e91e63",
+        "--title-color": "#ad1457",
+        "--highlight-color": "#f48fb1",
+        "--warning-color": "#d81b60"
+    }
+}

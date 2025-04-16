@@ -1,0 +1,15 @@
+{
+    "name": "GitHub Light",
+    "category": "Light",
+    "variables": {
+        "--background-color": "#ffffff",
+        "--card-color": "#f6f8fa",
+        "--field-color": "#eaeef2",
+        "--border-color": "#d0d7de",
+        "--text-color": "#24292f",
+        "--icon-color": "#1b1f23",
+        "--title-color": "#1b1f23",
+        "--highlight-color": "#0969da",
+        "--warning-color": "#cf222e"
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "name": "Ocean Breeze",
+    "category": "Light",
+    "variables": {
+        "--background-color": "#e0f7fa",
+        "--card-color": "#b2ebf2",
+        "--field-color": "#80deea",
+        "--border-color": "#4dd0e1",
+        "--text-color": "#004d40",
+        "--icon-color": "#006064",
+        "--title-color": "#00796b",
+        "--highlight-color": "#00bcd4",
+        "--warning-color": "#d32f2f"
+    }
+}

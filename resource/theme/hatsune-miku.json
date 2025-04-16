@@ -1,0 +1,15 @@
+{
+    "name": "Hatsune Miku",
+    "category": "Special",
+    "variables": {
+        "--background-color": "#1b1f27",
+        "--card-color": "#22303c",
+        "--field-color": "#2e3b4e",
+        "--border-color": "#39c0ba",
+        "--text-color": "#b2fefe",
+        "--icon-color": "#00ffe0",
+        "--title-color": "#00e0c6",
+        "--highlight-color": "#39c5bb",
+        "--warning-color": "#ff5e80"
+    }
+}

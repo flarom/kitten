@@ -1,0 +1,15 @@
+{
+    "name": "OLED",
+    "category": "Dark",
+    "variables": {
+        "--background-color": "#000000",
+        "--card-color": "#121212",
+        "--field-color": "#1a1a1a",
+        "--border-color": "#1f1f1f",
+        "--text-color": "#e0e0e0",
+        "--icon-color": "#00ffcc",
+        "--title-color": "#00ffaa",
+        "--highlight-color": "#00ff88",
+        "--warning-color": "#ff4444"
+    }
+}

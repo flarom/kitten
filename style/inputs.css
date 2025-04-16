@@ -67,10 +67,10 @@ select {
     width: 50%;
     font-family: var(--font);
     transition: 0.3s background-color, 0.3s border-color;
+    cursor: pointer;
 }
 
 select:hover {
-    background-color: var(--highlight-back);
     border-color: var(--highlight-color);
 }
 

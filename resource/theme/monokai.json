@@ -1,0 +1,15 @@
+{
+    "name": "Monokai",
+    "category": "Dark",
+    "variables": {
+        "--background-color": "#272822",
+        "--card-color": "#3e3d32",
+        "--field-color": "#49483e",
+        "--border-color": "#75715e",
+        "--text-color": "#f8f8f2",
+        "--icon-color": "#f8f8f0",
+        "--title-color": "#f8f8f0",
+        "--highlight-color": "#a6e22e",
+        "--warning-color": "#f92672"
+    }
+}

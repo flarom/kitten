@@ -1,0 +1,15 @@
+{
+    "name": "Kasane Teto",
+    "category": "Special",
+    "variables": {
+        "--background-color": "#2b0d0d",
+        "--card-color": "#3a1414",
+        "--field-color": "#551919",
+        "--border-color": "#ff4d4d",
+        "--text-color": "#ffeaea",
+        "--icon-color": "#ff9999",
+        "--title-color": "#ff3c3c",
+        "--highlight-color": "#ff5e5e",
+        "--warning-color": "#ff1f1f"
+    }
+}

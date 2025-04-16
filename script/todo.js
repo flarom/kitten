@@ -131,6 +131,8 @@ function save() {
 
     localStorage.setItem("todoMarkdown", markdown);
     localStorage.setItem("todoTitle", listTitle.value);
+
+    updateWindowTitle(listTitle.value);
 }
 
 /**
@@ -340,6 +342,14 @@ function getCompletedItems() {
  */
 function getIncompleteItems() {
     return list.querySelectorAll(".todo-item input[type='checkbox']:not(:checked)").length;
+}
+
+function updateWindowTitle(title){
+    if(title != ""){
+        document.title = `${title} - Kitten`;
+    } else {
+        document.title = "Kitten";
+    }
 }
 
 load();
