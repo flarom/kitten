@@ -36,15 +36,7 @@ input[type="text"] {
     outline: none;
     margin-bottom: 5px;
     font-family: var(--font);
-}
-
-input[type="email"],
-input[type="password"],
-input[type="search"],
-input[type="tel"],
-input[type="url"],
-input[type="text"] {
-    width: 50%;
+    width: calc(100% - 45px);
 }
 
 input[type="email"]:focus,
@@ -57,6 +49,7 @@ input[type="text"]:focus {
     border-color: var(--highlight-color);
 }
 
+/* select */
 select {
     background-color: var(--field-color);
     color: var(--text-color);
