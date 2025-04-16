@@ -33,7 +33,8 @@ function applySavedPalette() {
         "--font-size",
         "--wallpaper",
         "--wallpaper-blur",
-        "--wallpaper-brightness"
+        "--wallpaper-brightness",
+        "--wallpaper-position"
     ];
 
     paletteVars.forEach(name => {
