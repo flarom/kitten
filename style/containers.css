@@ -87,24 +87,25 @@
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: var(--card-color);
+    background-color: var(--field-color);
     border: 1px solid var(--border-color);
     border-radius: 10px;
     min-width: 150px;
     z-index: 1000;
     white-space: nowrap;
     overflow: hidden;
-    right: 0; /* Alinha o menu à direita por padrão */
-    transform: translateX(0); /* Ajuste inicial */
+    right: 0;
+    transform: translateX(0);
+    padding: 10px 0px 10px 0px;
 }
 
 .dropdown-content.align-left {
-    right: auto; /* Remove alinhamento à direita */
-    left: 0; /* Alinha o menu à esquerda */
+    right: auto;
+    left: 0;
 }
 
 .dropdown-content .text-button {
-    display: block;
+    display: flex;
     width: 100%;
     padding: 8px 16px;
     text-align: left;
@@ -113,12 +114,23 @@
     cursor: pointer;
     font-size: 14px;
     border-radius: 0;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.3s, color 0.3s, margin 1s;
 }
 
 .dropdown-content .text-button:hover {
-    background-color: var(--field-color);
+    background-color: var(--highlight-back);
+    color: var(--highlight-color)
 }
 
 .dropdown.show .dropdown-content {
     display: block;
+}
+
+@media screen and (max-width: 800px) {
+    .dropdown-content .text-button{
+        margin-top: 7px;
+        margin-bottom: 7px;
+    }
 }

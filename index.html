@@ -19,23 +19,25 @@
         <div class="title-bar">
             <input type="text" id="list-title" placeholder="Tasklist title" class="title-box" oninput="save()">
             <div class="dropdown">
-                <button class="icon-button dropdown-btn" onclick="toggleDropdown('file-menu')">more_vert</button>
+                <button class="icon-button dropdown-btn" onclick="toggleDropdown('file-menu')" translate="no">more_vert</button>
                 <div class="dropdown-content menu" id="file-menu">
-                    <button class="text-button" onclick="exportTasks()">Export Markdown</button>
+                    <button class="text-button" onclick="exportTasks()"><span class="icon" translate="no">save</span>Save file</button>
                     <button class="text-button">
-                        <label for="import-file" style="cursor: pointer;">Import Markdown</label>
+                        <span class="icon" translate="no">folder_open</span>
+                        <label for="import-file" style="cursor:pointer">Open file</label>
                         <input type="file" id="import-file" style="display: none;" onchange="importTasks(event)">
                     </button>
+                    <hr>
+                    <button class="text-button" onclick="window.open('settings.html', '_self').focus();"><span class="icon" translate="no">settings</span>Settings</button>
                 </div>
             </div>
         </div>
         <div id="list" class="todo-list"></div>
         <div class="button-bar">
-            <button onclick="window.open('settings.html', '_self').focus();" class="icon-button" title="Settings" translate="no">settings</button>
             <button onclick="sortItemsAlphabetically()" class="icon-button sort-button" title="Sort items alphabetically (Ctrl+I)" translate="no">abc</button>
             <button onclick="moveCheckedToTop()" class="icon-button" title="Move checked items to the top (Ctrl+U)" translate="no">keyboard_arrow_up</button>
             <button onclick="moveUncheckedToTop()" class="icon-button" title="Move checked items to the bottom (Ctrl+Y)" translate="no">keyboard_arrow_down</button>
-            <button onclick="createItem()" class="icon-button create-button" title="Create new item (Ctrl+Q)" translate="no">add</button>
+            <button onclick="createItem()" class="icon-button create-button" title="Create new item (Ctrl+K)" translate="no">add</button>
         </div>
     </div>
 

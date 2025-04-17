@@ -2,7 +2,6 @@ function toggleDropdown(menuId) {
     const menu = document.getElementById(menuId);
     const dropdown = menu.parentElement;
 
-    // Fecha todos os menus abertos
     document.querySelectorAll('.dropdown').forEach(d => {
         if (d !== dropdown) {
             d.classList.remove('show');
@@ -10,23 +9,19 @@ function toggleDropdown(menuId) {
         }
     });
 
-    // Alterna o menu atual
     dropdown.classList.toggle('show');
 
-    // Reposiciona o menu se necessário
     if (dropdown.classList.contains('show')) {
         const menuRect = menu.getBoundingClientRect();
         const viewportWidth = window.innerWidth;
 
-        // Verifica se o menu está saindo da tela à direita
         if (menuRect.right > viewportWidth) {
-            menu.classList.add('align-left'); // Move o menu para a esquerda
+            menu.classList.add('align-left');
         } else {
-            menu.classList.remove('align-left'); // Mantém o menu à direita
+            menu.classList.remove('align-left');
         }
     }
 
-    // Fecha o menu ao clicar fora
     document.addEventListener('click', closeDropdownOnClickOutside);
 }
 
