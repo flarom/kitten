@@ -8,10 +8,12 @@ let currentId = 0;
  * @param {boolean} [checked=false] - Whether the item is checked.
  * @param {boolean} [isSubItem=false] - Whether the item is a subitem.
  * @param {HTMLElement|null} [parentDiv=null] - The parent element for subitems.
- * @returns {HTMLElement|undefined} - The created item element.
+ * @returns {Promise<HTMLElement|undefined>} - The created item element.
  */
-function createItem(task = "", checked = false, isSubItem = false, parentDiv = null) {
-    if (!task) task = prompt(isSubItem ? "New subitem:" : "New item:");
+async function createItem(task = "", checked = false, isSubItem = false, parentDiv = null) {
+    if (!task) {
+        task = await promptString(isSubItem ? "New subitem:" : "New item:");
+    }
     if (!task) return;
 
     const itemId = `listItem${currentId++}`;
@@ -41,7 +43,9 @@ function createItem(task = "", checked = false, isSubItem = false, parentDiv = n
         addSubItemBtn.textContent = "add";
         addSubItemBtn.title = "Add Subitem";
         addSubItemBtn.setAttribute("translate", "no");
-        addSubItemBtn.onclick = () => createItem("", false, true, item);
+        addSubItemBtn.onclick = async () => {
+            await createItem("", false, true, item);
+        };
 
         btnDiv.appendChild(addSubItemBtn);
     }
@@ -51,7 +55,9 @@ function createItem(task = "", checked = false, isSubItem = false, parentDiv = n
     editBtn.textContent = "edit";
     editBtn.title = "Edit";
     editBtn.setAttribute("translate", "no");
-    editBtn.onclick = () => updateItem(itemId);
+    editBtn.onclick = async () => {
+        await updateItem(itemId);
+    };
 
     const delBtn = document.createElement("button");
     delBtn.className = "icon-button delete-button";
@@ -91,10 +97,10 @@ function createItem(task = "", checked = false, isSubItem = false, parentDiv = n
  * Updates the text of an existing todo item.
  * @param {string} id - The ID of the item to update.
  */
-function updateItem(id) {
+async function updateItem(id) {
     const item = document.getElementById(id);
     const label = item.querySelector("label");
-    const newText = prompt("Edit item:", label.textContent.trim());
+    const newText = await promptString("Edit item:", label.textContent.trim());
     if (newText !== null) {
         label.textContent = " " + newText;
     }
@@ -143,7 +149,7 @@ let isLoading = false;
 /**
  * Loads the todo list from localStorage and populates the UI.
  */
-function load() {
+async function load() {
     isLoading = true;
 
     const savedTitle = localStorage.getItem("todoTitle");
@@ -160,7 +166,7 @@ function load() {
     const lines = markdown.trim().split("\n");
     let currentParent = null;
 
-    lines.forEach(line => {
+    for (const line of lines) {
         const match = line.match(/^( {4})?- \[(x| )\] (.+)/);
         if (match) {
             const isSubItem = !!match[1];
@@ -168,17 +174,16 @@ function load() {
             const task = match[3];
 
             if (isSubItem && currentParent) {
-                createItem(task, checked, true, currentParent);
+                await createItem(task, checked, true, currentParent);
             } else {
-                currentParent = createItem(task, checked);
+                currentParent = await createItem(task, checked);
             }
         }
-    });
+    }
 
     updateProgressBar();
     isLoading = false;
 }
-
 /**
  * Sorts the main todo items alphabetically and their subitems as well.
  */
