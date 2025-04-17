@@ -81,10 +81,12 @@ function createItem(task = "", checked = false, isSubItem = false, parentDiv = n
         list.appendChild(item);
     }
 
-    save();
+    if (!isLoading) {
+        save();
+    }
+
     return item;
 }
-
 /**
  * Updates the text of an existing todo item.
  * @param {string} id - The ID of the item to update.
@@ -136,17 +138,24 @@ function save() {
     updateProgressBar();
 }
 
+let isLoading = false;
+
 /**
  * Loads the todo list from localStorage and populates the UI.
  */
 function load() {
+    isLoading = true;
+
     const savedTitle = localStorage.getItem("todoTitle");
     if (savedTitle) {
         listTitle.value = savedTitle;
     }
 
     const markdown = localStorage.getItem("todoMarkdown");
-    if (!markdown) return;
+    if (!markdown) {
+        isLoading = false;
+        return;
+    }
 
     const lines = markdown.trim().split("\n");
     let currentParent = null;
@@ -167,6 +176,7 @@ function load() {
     });
 
     updateProgressBar();
+    isLoading = false;
 }
 
 /**

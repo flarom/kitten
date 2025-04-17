@@ -42,6 +42,7 @@
     height: 4px;
     border-radius: 10px;
     overflow: hidden;
+    margin-bottom: 10px;
 }
 
 .progress-bar {
