@@ -392,8 +392,10 @@ function updateProgressBar() {
     if (pb && total > 0) {
         const percent = (done / total) * 100;
         pb.style.width = `${percent}%`;
+        pb.title = `${percent}%`;
     } else {
         pb.style.width = `0%`;
+        pb.title = `0%`;
     }
 }
 
