@@ -5,8 +5,8 @@ let mainWindow;
 
 app.whenReady().then(() => {
     mainWindow = new BrowserWindow({
-        width: 1000,
-        height: 700,
+        width: 500,
+        height: 500,
         autoHideMenuBar: true,
         icon: path.join(__dirname, "resources", "favicon.png"),
         webPreferences: {
