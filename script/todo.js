@@ -377,12 +377,20 @@ function updateWindowTitle(title){
 
 function updateProgressBar() {
     const pb = document.getElementById('progress-bar');
-    const total = getTodoCounts().totalParentItems;
-    const done = getTodoCounts().totalParentCheckedItems;
+    const parentItems = list.querySelectorAll(".todo-item");
+
+    let total = parentItems.length;
+    let done = 0;
+
+    parentItems.forEach(item => {
+        const checkbox = item.querySelector(":scope > .todo-item-content > input[type='checkbox']");
+        if (checkbox && checkbox.checked) {
+            done++;
+        }
+    });
 
     if (pb && total > 0) {
         const percent = (done / total) * 100;
- 
         pb.style.width = `${percent}%`;
     } else {
         pb.style.width = `0%`;
