@@ -13,8 +13,22 @@
 
 <body>
     <div class="main">     
-        <div class="progress-wrapper"><div class="progress-bar" id="progress-bar"></div></div>     
-        <input type="text" id="list-title" placeholder="Tasklist title" class="title-box" oninput="save()">
+        <div class="progress-wrapper">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="title-bar">
+            <input type="text" id="list-title" placeholder="Tasklist title" class="title-box" oninput="save()">
+            <div class="dropdown">
+                <button class="icon-button dropdown-btn" onclick="toggleDropdown('file-menu')">more_vert</button>
+                <div class="dropdown-content menu" id="file-menu">
+                    <button class="text-button" onclick="exportTasks()">Export Markdown</button>
+                    <button class="text-button">
+                        <label for="import-file" style="cursor: pointer;">Import Markdown</label>
+                        <input type="file" id="import-file" style="display: none;" onchange="importTasks(event)">
+                    </button>
+                </div>
+            </div>
+        </div>
         <div id="list" class="todo-list"></div>
         <div class="button-bar">
             <button onclick="window.open('settings.html', '_self').focus();" class="icon-button" title="Settings" translate="no">settings</button>
@@ -28,6 +42,7 @@
     <script src="script/todo.js"></script>
     <script src="script/shortcuts.js"></script>
     <script src="script/settings.js"></script>
+    <script src="script/menus.js"></script>
 </body>
 
 </html>

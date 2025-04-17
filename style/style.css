@@ -294,23 +294,6 @@ input[type="checkbox"]:checked {
     border-color: var(--highlight-color);
 }
 
-.title-box {
-    background-color: transparent;
-    color: var(--title-color);
-    font-family: var(--font);
-    font-size: calc(1.1em * var(--font-size));
-    border: none;
-    outline: none;
-    width: calc(100% - 5px);
-    border-radius: 5px;
-    transition: background-color 0.3s, margin-bottom 1s;
-}
-
-.title-box:focus,
-.title-box:hover {
-    background-color: var(--field-color);
-}
-
 @media screen and (max-width: 800px) {
     body {
         font-size: calc(1.1em * var(--font-size));
@@ -332,7 +315,7 @@ input[type="checkbox"]:checked {
         gap: 20px
     }
 
-    .title-box {
+    .title-bar {
         margin-bottom: 20px;
         margin-top: 10px;
     }
