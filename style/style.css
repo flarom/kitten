@@ -9,6 +9,7 @@ body {
     background-size: cover;
     background-position: var(--wallpaper-position);
     background-attachment: fixed;
+    animation: fade-in 1s;
 }
 body::before {
     content: "";
@@ -23,16 +24,6 @@ body::before {
     background-attachment: inherit;
     filter: blur(var(--wallpaper-blur)) brightness(var(--wallpaper-brightness)) ;
     z-index: -1;
-}
-
-.document{
-    background-color: var(--doc-bg);
-    padding: 10px;
-    width: 90%;
-    max-width: 800px;
-    margin: 0 auto;
-    z-index: 2;
-    margin-top: 10px;
 }
 
 h1,h2 {
@@ -194,6 +185,8 @@ button {
     color:var(--highlight-color);
     animation: rotate-text 0.5s ease-in-out;
 }
+
+/* TODO ITEMS */
 
 .todo-item {
     margin: 5px 0;
@@ -372,6 +365,16 @@ input[type="checkbox"]:checked {
     }
 }
 
+@keyframes fade-in {
+    0% {
+        opacity: 0%;
+    }
+    100% {
+        opacity: 100%;
+    }
+}
+
+button.text-seccondary-button,
 button.text-button {
     border: 1px solid var(--border-color);
     border-radius: 15px;
@@ -385,9 +388,15 @@ button.text-button {
     transition: background-color 0.3s, border-color 0.3s;
 }
 
+button.text-seccondary-button:hover,
 button.text-button:hover {
     background-color: var(--highlight-back);
     border-color: var(--highlight-color);
+}
+
+button.text-seccondary-button {
+    border-color: transparent;
+    background-color: transparent;
 }
 
 button.danger-button {
@@ -418,6 +427,61 @@ button.danger-button:active {
     50%  { transform: translate(2px , -2px); }
     75%  { transform: translate(-2px, 0px) ; }
     100% { transform: translate(2px , 2px) ; }
+}
+
+/* CAT EAR BUTTON */
+
+.cat-ear-button {
+    position: relative;
+    background-color: var(--card-color);
+    color: var(--title-color);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 5px 20px;
+    height: 40px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+    overflow: visible;
+}
+
+.cat-ear-button:hover {
+    background-color: var(--highlight-back);
+    border-color: var(--highlight-color);
+}
+
+/* ears */
+.cat-ear-button::before,
+.cat-ear-button::after {
+    content: "";
+    position: absolute;
+    top: -11px;
+    width: 20px;
+    height: 20px;
+    background-color: var(--card-color);
+    border: 1px solid var(--border-color);
+    transform: rotate(45deg);
+    border-bottom: none;
+    border-right: none;
+    z-index: 1;
+    transition: 0.3s opacity;
+}
+
+/* left ear */
+.cat-ear-button::before {
+    left: 20px;
+    border-top-left-radius: 3px;
+}
+
+/* rigt ear */
+.cat-ear-button::after {
+    right: 20px;
+    border-top-left-radius: 3px;
+}
+
+.cat-ear-button:hover::before,
+.cat-ear-button:hover::after {
+    opacity: 0;
 }
 
 /* __ SCROLL BARS _____________________________________________________________ */
