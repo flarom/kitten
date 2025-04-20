@@ -111,16 +111,21 @@
     border-radius: 0;
     align-items: center;
     gap: 10px;
-    transition: background-color 0.3s, color 0.3s, margin 1s;
+    transition: none;
 }
 
 .dropdown-content .text-button:hover {
     background-color: var(--highlight-back);
-    color: var(--highlight-color)
 }
 
 .dropdown.show .dropdown-content {
     display: block;
+}
+
+.dropdown-content .text-button kbd {
+    margin-left: auto;
+    opacity: 0.6;
+    font-size: 12px;
 }
 
 @media screen and (max-width: 800px) {

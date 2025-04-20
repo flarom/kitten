@@ -36,8 +36,7 @@ function closeDropdownOnClickOutside(event) {
     document.removeEventListener('click', closeDropdownOnClickOutside);
 }
 
-/* this only exists because electron doesn't support the `prompt()` method*/
-function promptString(title) {
+function promptString(title, defaultText="") {
     return new Promise((resolve) => {
         // overlay
         const overlay = document.createElement('div');
@@ -46,7 +45,8 @@ function promptString(title) {
         overlay.style.left = '0';
         overlay.style.width = '100vw';
         overlay.style.height = '100vh';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+        overlay.style.backdropFilter = 'blur(2px)';
         overlay.style.display = 'flex';
         overlay.style.justifyContent = 'center';
         overlay.style.alignItems = 'center';
@@ -69,6 +69,7 @@ function promptString(title) {
         // field
         const input = document.createElement('input');
         input.type = 'text';
+        input.value = defaultText ? defaultText : ""
         input.style.background = 'var(--field-color)';
         input.style.color = 'var(--text-color)';
         input.style.width = 'calc(100% - 40px';
@@ -127,5 +128,172 @@ function promptString(title) {
                 closePrompt(null);
             }
         });
+    });
+}
+
+function promptSelect(title, options = [], defaultOption = "") {
+    return new Promise((resolve) => {
+        // overlay
+        const overlay = document.createElement('div');
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100vw';
+        overlay.style.height = '100vh';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+        overlay.style.backdropFilter = 'blur(2px)';
+        overlay.style.display = 'flex';
+        overlay.style.justifyContent = 'center';
+        overlay.style.alignItems = 'center';
+        overlay.style.zIndex = '1000';
+
+        // dialog
+        const dialog = document.createElement('div');
+        dialog.style.backgroundColor = 'var(--card-color)';
+        dialog.style.padding = '20px';
+        dialog.style.border = '1px solid var(--border-color)';
+        dialog.style.borderRadius = '15px';
+        dialog.style.width = '300px';
+
+        // title
+        const titleElement = document.createElement('p');
+        titleElement.textContent = title;
+        titleElement.style.marginBottom = '15px';
+        dialog.appendChild(titleElement);
+
+        // combo-box
+        const select = document.createElement('select');
+        select.style.width = '100%';
+        select.style.height = '35px';
+        select.style.borderRadius = '15px';
+        select.style.border = '1px solid var(--border-color)';
+        select.style.background = 'var(--field-color)';
+        select.style.color = 'var(--text-color)';
+        select.style.marginBottom = '15px';
+        select.style.padding = '0px 10px';
+        select.style.outline = 'none';
+
+        options.forEach((opt) => {
+            const optionElement = document.createElement('option');
+            optionElement.value = opt;
+            optionElement.textContent = opt;
+            if (opt === defaultOption) {
+                optionElement.selected = true;
+            }
+            select.appendChild(optionElement);
+        });
+
+        dialog.appendChild(select);
+
+        // buttons
+        const buttonContainer = document.createElement('div');
+        buttonContainer.style.display = 'flex';
+        buttonContainer.style.gap = '10px';
+
+        const cancelButton = document.createElement('button');
+        cancelButton.textContent = 'Cancel';
+        cancelButton.style.padding = '5px 30px';
+        cancelButton.style.border = '1px solid var(--border-color)';
+        cancelButton.style.borderRadius = '15px';
+        cancelButton.style.backgroundColor = 'transparent';
+        cancelButton.style.color = 'white';
+        cancelButton.style.cursor = 'pointer';
+
+        const submitButton = document.createElement('button');
+        submitButton.textContent = 'Submit';
+        submitButton.style.padding = '5px 30px';
+        submitButton.style.border = '1px solid var(--highlight-color)';
+        submitButton.style.borderRadius = '15px';
+        submitButton.style.backgroundColor = 'var(--highlight-back)';
+        submitButton.style.color = 'white';
+        submitButton.style.cursor = 'pointer';
+
+        buttonContainer.appendChild(cancelButton);
+        buttonContainer.appendChild(submitButton);
+        dialog.appendChild(buttonContainer);
+
+        overlay.appendChild(dialog);
+        document.body.appendChild(overlay);
+
+        function closePrompt(result) {
+            document.body.removeChild(overlay);
+            resolve(result);
+        }
+
+        cancelButton.addEventListener('click', () => closePrompt(null));
+        submitButton.addEventListener('click', () => closePrompt(select.value));
+
+        overlay.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                closePrompt(select.value);
+            } else if (event.key === 'Escape') {
+                closePrompt(null);
+            }
+        });
+
+        select.focus();
+    });
+}
+
+function promptMessage(htmlContent) {
+    return new Promise((resolve) => {
+        // overlay
+        const overlay = document.createElement('div');
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100vw';
+        overlay.style.height = '100vh';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+        overlay.style.backdropFilter = 'blur(2px)';
+        overlay.style.display = 'flex';
+        overlay.style.justifyContent = 'center';
+        overlay.style.alignItems = 'center';
+        overlay.style.zIndex = '1000';
+
+        // dialog
+        const dialog = document.createElement('div');
+        dialog.style.backgroundColor = 'var(--card-color)';
+        dialog.style.padding = '20px';
+        dialog.style.border = '1px solid var(--border-color)';
+        dialog.style.borderRadius = '15px';
+        dialog.style.width = '100%';
+        dialog.style.maxWidth = '500px';
+
+        // html content
+        const content = document.createElement('div');
+        content.innerHTML = htmlContent;
+        content.style.marginBottom = '15px';
+        dialog.appendChild(content);
+
+        // ok button
+        const okButton = document.createElement('button');
+        okButton.textContent = 'Ok';
+        okButton.style.padding = '5px 30px';
+        okButton.style.border = '1px solid var(--highlight-color)';
+        okButton.style.borderRadius = '15px';
+        okButton.style.backgroundColor = 'var(--highlight-back)';
+        okButton.style.color = 'white';
+        okButton.style.cursor = 'pointer';
+        okButton.style.display = 'block';
+
+        dialog.appendChild(okButton);
+        overlay.appendChild(dialog);
+        document.body.appendChild(overlay);
+
+        function closePrompt() {
+            document.body.removeChild(overlay);
+            resolve();
+        }
+
+        okButton.addEventListener('click', closePrompt);
+
+        overlay.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === 'Escape') {
+                closePrompt();
+            }
+        });
+
+        okButton.focus();
     });
 }

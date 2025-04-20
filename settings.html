@@ -13,13 +13,11 @@
 </head>
 
 <body>
-    <input type="text" id="list-title" placeholder="Tasklist title" class="title-box" oninput="save()" hidden>
-    <div id="list" class="todo-list" hidden></div>
     <div class="document">
         <a href="index.html"><span class="icon" translate="no">arrow_back</span> Go back</a>
         <h1>Settings</h1>
         <h2>Look and feel</h2>
-        <!-- color palette -------------------------------------------------------------------------->
+        <!-- #region color palette -->
         <details name="setting">
             <summary>
                 <span class="center-flex"><span class="large-icon" translate="no">palette</span>Color palette</span>
@@ -73,8 +71,9 @@
                 <label for="--warning-color">Warning color</label>
             </div>
         </details>
+        <!-- #endregion -->
 
-        <!-- fonts ---------------------------------------------------------------------------------->
+        <!-- #region fonts -->
         <details name="setting">
             <summary>
                 <span class="center-flex"><span class="large-icon" translate="no">brand_family</span>Font</span>
@@ -88,8 +87,9 @@
             <label for="--font-size">Size</label><br>
             <input type="range" name="--font-size" id="--font-size" min="0.5" max="1.5" value="1" step="0.1" oninput="saveFont()">
         </details>
+        <!-- #endregion -->
 
-        <!-- wallpaper ------------------------------------------------------------------------------>
+        <!-- #region wallpaper -->
         <details name="setting">
             <summary>
                 <span class="center-flex"><span class="large-icon" translate="no">wallpaper</span>Wallpaper</span>
@@ -115,29 +115,25 @@
                 <option value="right">Right</option>
             </select>
         </details>
+        <!-- #endregion -->
 
         <hr>
 
         <h2>Data</h2>
-        <!-- task list --------------------------------------------------------------------------->
+        <!-- #region task list -->
         <details name="setting">
             <summary><span class="center-flex"><span class="large-icon" translate="no">checklist</span>Manage task list</span>
             </summary>
-            <button class="text-button" onclick="exportTasks()">Export Markdown</button>
-            <button class="text-button">
-                <label for="import-file" style="cursor: pointer;">Import Markdown</label>
-                <input type="file" id="import-file" style="display: none;" onchange="importTasks(event)">
-            </button>
-            <button class="danger-button" data-action="clearTasks()" title="Clear todo list [hold]">Clear</button>
+            <button class="danger-button" data-action="clearListData()" title="Clear todo list [hold]">Clear</button>
         </details>
-        <!-- settings ---------------------------------------------------------------------------->
+        <!-- #endregion -->
+        <!-- #region settings -->
         <details name="setting">
             <summary><span class="center-flex"><span class="large-icon" translate="no">settings</span>Manage settings</span></summary>
             <button class="danger-button" data-action="clearSettings()" title="Clear settings [hold]">Clear</button>
         </details>
+        <!-- #endregion -->
         <hr>
-
-        <h2>About</h2>
         <details name="setting">
             <summary><span class="center-flex"><span class="large-icon" translate="no">info</span>About Kitten</span></summary>
             <div class="center-flex break-on-mobile">
@@ -162,6 +158,7 @@
                     <ul>
                         <li><a href="https://github.com/flarom/kitten/blob/main/README.md">Documentation</a></li>
                         <li><a href="https://github.com/flarom/kitten/">GitHub Repository</a></li>
+                        <li><a href="getkitten.html">Landing Page</a></li>
                     </ul>
                 </div>
             </div>

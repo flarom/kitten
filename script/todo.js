@@ -1,377 +1,359 @@
-const list = document.getElementById("list");
+const listContainer = document.getElementById("list");
 const listTitle = document.getElementById("list-title");
-let currentId = 0;
 
-/**
- * Creates a new todo item or subitem.
- * @param {string} [task=""] - The task description.
- * @param {boolean} [checked=false] - Whether the item is checked.
- * @param {boolean} [isSubItem=false] - Whether the item is a subitem.
- * @param {HTMLElement|null} [parentDiv=null] - The parent element for subitems.
- * @returns {Promise<HTMLElement|undefined>} - The created item element.
- */
-async function createItem(task = "", checked = false, isSubItem = false, parentDiv = null) {
-    if (!task) {
-        task = await promptString(isSubItem ? "New subitem:" : "New item:");
-    }
-    if (!task) return;
+const todoItem = {
+    name: "",           // item name
+    description: "",    // item description
+    completed: false,   // determines if the todo item is checked
+    tags: [],           // array of tags
+    childItems: [],     // array of child todoItems
+}
 
-    const itemId = `listItem${currentId++}`;
+const tag = {
+    name: "",   // tag name
+    icon: "",   // icon
+}
 
-    const item = document.createElement("div");
-    item.id = itemId;
-    item.className = isSubItem ? "todo-subitem" : "todo-item";
+const icons = [
+    "star", "search", "home", "favorite", "bedtime", "pill", "priority_high", "celebration", "bookmark", "today", "mail", "call", "shopping_cart", "sell", "work", "location_on"
+]
 
-    const itemContent = document.createElement("div");
-    itemContent.className = "todo-item-content";
+let todoList = [];
+let tags = [];
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = checked;
-    checkbox.addEventListener("change", save);
-
-    const label = document.createElement("label");
-    label.setAttribute("translate", "no");
-    label.textContent = " " + task;
-
-    const btnDiv = document.createElement("div");
-    btnDiv.className = "button-div";
-
-    if (!isSubItem) {
-        const addSubItemBtn = document.createElement("button");
-        addSubItemBtn.className = "icon-button add-subitem-button";
-        addSubItemBtn.textContent = "add";
-        addSubItemBtn.title = "Add Subitem";
-        addSubItemBtn.setAttribute("translate", "no");
-        addSubItemBtn.onclick = async () => {
-            await createItem("", false, true, item);
-        };
-
-        btnDiv.appendChild(addSubItemBtn);
-    }
-
-    const editBtn = document.createElement("button");
-    editBtn.className = "icon-button edit-button";
-    editBtn.textContent = "edit";
-    editBtn.title = "Edit";
-    editBtn.setAttribute("translate", "no");
-    editBtn.onclick = async () => {
-        await updateItem(itemId);
-    };
-
-    const delBtn = document.createElement("button");
-    delBtn.className = "icon-button delete-button";
-    delBtn.textContent = "delete";
-    delBtn.title = "Delete";
-    delBtn.setAttribute("translate", "no");
-    delBtn.onclick = () => deleteItem(itemId);
-
-    btnDiv.appendChild(editBtn);
-    btnDiv.appendChild(delBtn);
-
-    itemContent.appendChild(checkbox);
-    itemContent.appendChild(label);
-    itemContent.appendChild(btnDiv);
-
-    item.appendChild(itemContent);
-
-    if (isSubItem && parentDiv) {
-        let subItemContainer = parentDiv.querySelector(".subitem-container");
-        if (!subItemContainer) {
-            subItemContainer = document.createElement("div");
-            subItemContainer.className = "subitem-container";
-            parentDiv.appendChild(subItemContainer);
+//#region CRUD
+    //#region CRUD TODO ITEMS
+    async function createTodoItem(name, description = "", tags = [], childItems = []) {
+        if (!name) {
+            name = await promptString("New item name:");
         }
-        subItemContainer.appendChild(item);
-    } else {
-        list.appendChild(item);
-    }
+        if (!name) return;
 
-    if (!isLoading) {
+        const newItem = {
+            name,
+            description,
+            completed: false,
+            childItems,
+            tags
+        };
+        todoList.push(newItem);
+
+        save(true);
+
+        return newItem;
+    }
+    
+    function readTodoItem(name) {
+        return todoList.find(item => item.name === name);
+    }
+    
+    function updateTodoItem(name, updates) {
+        const item = todoList.find(item => item.name === name);
+        if (!item) return null;
+    
+        Object.assign(item, updates);
+
+        save(true);
+
+        return item;
+    }
+    
+    function deleteTodoItem(name) {
+        const index = todoList.findIndex(item => item.name === name);
+        if (index !== -1) {
+            const removed = todoList.splice(index, 1);
+            return removed[0];
+        }
+
+        save(true);
+
+        return null;
+    }
+    //#endregion
+    //#region CRUD TAGS
+    function createTag(name, icon) {
+        const tagExists = tags.some(tag => tag.name === name);
+        if (tagExists) return null;
+    
+        const newTag = { name, icon };
+        tags.push(newTag);
+
         save();
+
+        return newTag;
     }
-
-    return item;
-}
-/**
- * Updates the text of an existing todo item.
- * @param {string} id - The ID of the item to update.
- */
-async function updateItem(id) {
-    const item = document.getElementById(id);
-    const label = item.querySelector("label");
-    const newText = await promptString("Edit item:", label.textContent.trim());
-    if (newText !== null) {
-        label.textContent = " " + newText;
+    
+    function readTag(name) {
+        return tags.find(tag => tag.name === name);
     }
-    save();
-}
+    
+    function updateTag(name, updates) {
+        const tag = tags.find(tag => tag.name === name);
+        if (!tag) return null;
+    
+        Object.assign(tag, updates);
 
-/**
- * Deletes a todo item by its ID.
- * @param {string} id - The ID of the item to delete.
- */
-function deleteItem(id) {
-    const item = document.getElementById(id);
-    item.remove();
-    save();
-}
+        save();
 
-/**
- * Saves the current state of the todo list to localStorage.
- */
-function save() {
-    let markdown = "";
-    const items = list.querySelectorAll(".todo-item");
+        return tag;
+    }
+    
+    function deleteTag(name) {
+        const index = tags.findIndex(tag => tag.name === name);
+        if (index !== -1) {
+            const removed = tags.splice(index, 1);
+            return removed[0];
+        }
 
-    items.forEach(item => {
-        const checkbox = item.querySelector("input[type='checkbox']");
-        const label = item.querySelector("label").textContent.trim();
-        markdown += checkbox.checked ? `- [x] ${label}\n` : `- [ ] ${label}\n`;
+        save();
 
-        const subItems = item.querySelectorAll(".todo-subitem");
-        subItems.forEach(subItem => {
-            const subCheckbox = subItem.querySelector("input[type='checkbox']");
-            const subLabel = subItem.querySelector("label").textContent.trim();
-            markdown += subCheckbox.checked ? `    - [x] ${subLabel}\n` : `    - [ ] ${subLabel}\n`;
-        });
-    });
+        return null;
+    }
+    //#endregion
+//#endregion
 
-    localStorage.setItem("todoMarkdown", markdown);
-    localStorage.setItem("todoTitle", listTitle.value);
+//#region LOCAL STORAGE
+function save(update = false) {
+    localStorage.setItem("kitten_todoListTitle", listTitle.value);
+    localStorage.setItem("kitten_todoList", JSON.stringify(todoList));
+    localStorage.setItem("kitten_tags", JSON.stringify(tags));
+    console.info("SAVED TODO LIST TITLE\n" + localStorage.getItem("kitten_todoListTitle"));
+    console.info("SAVED TODO ITEMS\n" + localStorage.getItem("kitten_todoList"));
+    console.info("SAVED TAGS\n" + localStorage.getItem("kitten_tags"));
 
     updateWindowTitle(listTitle.value);
-    updateProgressBar();
+
+    if (update) {
+        renderTodoList();
+    }
 }
 
-let isLoading = false;
+function load() {
+    const savedTitle = localStorage.getItem("kitten_todoListTitle");
+    const savedList = localStorage.getItem("kitten_todoList");
+    const savedTags = localStorage.getItem("kitten_tags");
+    
+    if (savedTitle) listTitle.value = savedTitle;
+    if (savedList) todoList = JSON.parse(savedList);
+    if (savedTags) tags = JSON.parse(savedTags);
+}
 
-/**
- * Loads the todo list from localStorage and populates the UI.
- */
-async function load() {
-    isLoading = true;
+function clearListData() {
+    localStorage.removeItem("kitten_todoListTitle");
+    localStorage.removeItem("kitten_todoList");
+    window.open('index.html', '_this');
+}
 
-    const savedTitle = localStorage.getItem("todoTitle");
-    if (savedTitle) {
-        listTitle.value = savedTitle;
-    }
+function clearTagsData() {
+    localStorage.removeItem("kitten_tags");
+    window.open('index.html', '_this');
+}
+//#endregion
 
-    const markdown = localStorage.getItem("todoMarkdown");
-    if (!markdown) {
-        isLoading = false;
-        return;
-    }
+//#region FILE MANAGEMENT
+function exportJson() {
+    const data = {
+        title: listTitle.value || "todo",
+        todoList,
+        tags
+    };
 
-    const lines = markdown.trim().split("\n");
-    let currentParent = null;
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${data.title}.kitten.json`;
+    a.click();
+}
 
-    for (const line of lines) {
-        const match = line.match(/^( {4})?- \[(x| )\] (.+)/);
-        if (match) {
-            const isSubItem = !!match[1];
-            const checked = match[2] === "x";
-            const task = match[3];
+function importJson() {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
 
-            if (isSubItem && currentParent) {
-                await createItem(task, checked, true, currentParent);
-            } else {
-                currentParent = await createItem(task, checked);
+    input.onchange = (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const data = JSON.parse(e.target.result);
+                if (data.todoList && data.tags) {
+                    todoList = data.todoList;
+                    tags = data.tags;
+                    listTitle.value = data.title || "";
+                    save(true);
+                } else {
+                    alert("invalid file");
+                }
+            } catch (err) {
+                alert("Failed to import file");
+            }
+        };
+
+        reader.readAsText(file);
+    };
+
+    input.click();
+}
+
+function exportMd() {
+    const title = `# ${listTitle.value || "todo"}\n`;
+
+    function renderItem(item, depth = 0) {
+        const prefix = "    ".repeat(depth);
+        const checkbox = item.completed ? "[x]" : "[ ]";
+        let line = `${prefix}- ${checkbox} ${item.name}\n`;
+        if (item.childItems && item.childItems.length > 0) {
+            for (const child of item.childItems) {
+                line += renderItem(child, depth + 1);
             }
         }
+        return line;
     }
+
+    let content = title;
+    for (const item of todoList) {
+        content += renderItem(item);
+    }
+
+    const blob = new Blob([content], { type: "text/markdown" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${listTitle.value || "todo"}.md`;
+    a.click();
+}
+//#endregion
+
+//#region TODO TO HTML
+async function renderTodoList() {
+    listContainer.innerHTML = "";
+
+    function createItemElement(item, isSubitem = false, parentIndex = "") {
+        const itemId = `listItem${Math.floor(Math.random() * 1000000)}`; // random id
+        const wrapper = document.createElement("div");
+        wrapper.className = isSubitem ? "todo-subitem" : "todo-item";
+        wrapper.id = itemId;
+
+        const content = document.createElement("div");
+        content.className = "todo-item-content";
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = item.completed;
+        checkbox.onchange = () => {
+            item.completed = checkbox.checked;
+            save();
+            renderTodoList();
+        };
+
+        const label = document.createElement("label");
+        label.textContent = item.name;
+        label.setAttribute("translate", "no");
+
+        const buttonDiv = document.createElement("div");
+        buttonDiv.className = "button-div";
+
+        if (!isSubitem) {
+            const addBtn = document.createElement("button");
+            addBtn.className = "icon-button add-subitem-button";
+            addBtn.title = "Add Subitem";
+            addBtn.setAttribute("translate", "no");
+            addBtn.textContent = "add";
+            addBtn.onclick = async () => {
+                const subName = await promptString("New subitem name");
+                if (subName) {
+                    item.childItems.push({
+                        name: subName,
+                        description: "",
+                        completed: false,
+                        childItems: [],
+                        tags: []
+                    });
+                    save();
+                    renderTodoList();
+                }
+            };
+            buttonDiv.appendChild(addBtn);
+        }
+
+        const editBtn = document.createElement("button");
+        editBtn.className = "icon-button edit-button";
+        editBtn.title = "Edit";
+        editBtn.setAttribute("translate", "no");
+        editBtn.textContent = "edit";
+        editBtn.onclick = async () => {
+            const newName = await promptString("New name:", item.name);
+            if (newName !== null) {
+                item.name = newName;
+                save();
+                renderTodoList();
+            }
+        };
+
+        const delBtn = document.createElement("button");
+        delBtn.className = "icon-button delete-button";
+        delBtn.title = "Delete";
+        delBtn.setAttribute("translate", "no");
+        delBtn.textContent = "delete";
+        delBtn.onclick = () => {
+            if (isSubitem) {
+                const parentItem = todoList[parentIndex];
+                parentItem.childItems = parentItem.childItems.filter(child => child !== item);
+            } else {
+                todoList = todoList.filter(i => i !== item);
+            }
+            save();
+            renderTodoList();
+        };
+
+        buttonDiv.appendChild(editBtn);
+        buttonDiv.appendChild(delBtn);
+
+        content.appendChild(checkbox);
+        content.appendChild(label);
+        content.appendChild(buttonDiv);
+        wrapper.appendChild(content);
+
+        if (item.childItems && item.childItems.length > 0 && !isSubitem) {
+            const subContainer = document.createElement("div");
+            subContainer.className = "subitem-container";
+
+            item.childItems.forEach((subItem) => {
+                const subElement = createItemElement(subItem, true, todoList.indexOf(item));
+                subContainer.appendChild(subElement);
+            });
+
+            wrapper.appendChild(subContainer);
+        }
+
+        return wrapper;
+    }
+
+    todoList.forEach(item => {
+        const element = createItemElement(item);
+        listContainer.appendChild(element);
+    });
 
     updateProgressBar();
-    isLoading = false;
-}
-/**
- * Sorts the main todo items alphabetically and their subitems as well.
- */
-function sortItemsAlphabetically() {
-    const items = Array.from(list.querySelectorAll(".todo-item"));
-
-    items.sort((a, b) => {
-        const textA = a.querySelector("label").textContent.trim().toLowerCase();
-        const textB = b.querySelector("label").textContent.trim().toLowerCase();
-        return textA.localeCompare(textB);
-    });
-
-    list.innerHTML = "";
-    items.forEach(item => {
-        sortSubItems(item);
-        list.appendChild(item);
-    });
-    save();
 }
 
-/**
- * Moves all checked items to the top of the list.
- */
-function moveCheckedToTop() {
-    const items = Array.from(list.querySelectorAll(".todo-item"));
+function updateProgressBar() {
+    const pb = document.getElementById('progress-bar');
+    const counts = getTodoCounts();
+    const done = counts.totalParentCheckedItems;
+    const total = counts.totalParentItems;
 
-    items.forEach(sortSubItemsByCheckStatus);
-
-    const checkedItems = items.filter(item => item.querySelector("input[type='checkbox']").checked);
-    const uncheckedItems = items.filter(item => !item.querySelector("input[type='checkbox']").checked);
-
-    list.innerHTML = "";
-    [...checkedItems, ...uncheckedItems].forEach(item => list.appendChild(item));
-
-    save();
-}
-
-/**
- * Moves all unchecked items to the top of the list.
- */
-function moveUncheckedToTop() {
-    const items = Array.from(list.querySelectorAll(".todo-item"));
-
-    items.forEach(sortSubItemsByCheckStatus);
-
-    const checkedItems = items.filter(item => item.querySelector("input[type='checkbox']").checked);
-    const uncheckedItems = items.filter(item => !item.querySelector("input[type='checkbox']").checked);
-
-    list.innerHTML = "";
-    [...uncheckedItems, ...checkedItems].forEach(item => list.appendChild(item));
-
-    save();
-}
-
-/**
- * Sorts the subitems of a parent item by their checked status.
- * @param {HTMLElement} parentItem - The parent item containing subitems.
- */
-function sortSubItemsByCheckStatus(parentItem) {
-    const subContainer = parentItem.querySelector(".subitem-container");
-    if (!subContainer) return;
-
-    const subItems = Array.from(subContainer.querySelectorAll(".todo-subitem"));
-
-    const checked = subItems.filter(item => item.querySelector("input[type='checkbox']").checked);
-    const unchecked = subItems.filter(item => !item.querySelector("input[type='checkbox']").checked);
-
-    subContainer.innerHTML = "";
-    [...checked, ...unchecked].forEach(item => subContainer.appendChild(item));
-}
-
-/**
- * Sorts the subitems of a parent item alphabetically.
- * @param {HTMLElement} parentItem - The parent item containing subitems.
- */
-function sortSubItems(parentItem) {
-    const subContainer = parentItem.querySelector(".subitem-container");
-    if (!subContainer) return;
-
-    const subItems = Array.from(subContainer.querySelectorAll(".todo-subitem"));
-
-    subItems.sort((a, b) => {
-        const textA = a.querySelector("label").textContent.trim().toLowerCase();
-        const textB = b.querySelector("label").textContent.trim().toLowerCase();
-        return textA.localeCompare(textB);
-    });
-
-    subContainer.innerHTML = "";
-    subItems.forEach(subItem => subContainer.appendChild(subItem));
-}
-
-/**
- * Clears all tasks from the todo list and localStorage.
- */
-function clearTasks() {
-    localStorage.removeItem("todoMarkdown");
-    localStorage.removeItem("todoTitle");
-    window.open('index.html', '_self').focus();
-}
-
-/**
- * Exports the todo list as a Markdown file.
- */
-function exportTasks() {
-    const markdown = localStorage.getItem("todoMarkdown");
-    const title = localStorage.getItem("todoTitle") || "My Todo List";
-
-    if (!markdown) {
-        alert("There are no tasks to export");
-        return;
+    if (pb && total > 0) {
+        const percent = (done / total) * 100;
+        pb.style.width = `${percent}%`;
+        pb.title = `${percent.toFixed(2)}%`;
+    } else if (pb) {
+        pb.style.width = `0%`;
+        pb.title = `0%`;
     }
-
-    const blob = new Blob([`# ${title}\n\n${markdown}`], { type: "text/markdown" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${title.replace(/\s+/g, "_").toLowerCase()}.md`;
-    a.click();
-
-    URL.revokeObjectURL(url);
 }
 
-/**
- * Imports tasks from a Markdown file.
- * @param {Event} event - The file input change event.
- */
-function importTasks(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        const content = e.target.result;
-        const lines = content.split("\n");
-
-        list.innerHTML = "";
-
-        lines.forEach(line => {
-            const match = line.match(/- \[(x| )\] (.+)/);
-            if (match) {
-                const checked = match[1] === "x";
-                const task = match[2];
-                createItem(task, checked);
-            }
-        });
-
-        save();
-        window.open('index.html', '_self').focus();
-    };
-
-    reader.readAsText(file);
-}
-
-/**
- * Gets the counts of various todo item categories.
- * @returns {object} - An object containing counts for all requested categories.
- */
-function getTodoCounts() {
-    const allItems = list.querySelectorAll(".todo-item, .todo-subitem");
-    const allCheckedItems = list.querySelectorAll(".todo-item input[type='checkbox']:checked, .todo-subitem input[type='checkbox']:checked");
-    const allUncheckedItems = list.querySelectorAll(".todo-item input[type='checkbox']:not(:checked), .todo-subitem input[type='checkbox']:not(:checked)");
-
-    const parentItems = list.querySelectorAll(".todo-item");
-    const parentCheckedItems = list.querySelectorAll(".todo-item input[type='checkbox']:checked");
-    const parentUncheckedItems = list.querySelectorAll(".todo-item input[type='checkbox']:not(:checked)");
-
-    const childItems = list.querySelectorAll(".todo-subitem");
-    const childCheckedItems = list.querySelectorAll(".todo-subitem input[type='checkbox']:checked");
-    const childUncheckedItems = list.querySelectorAll(".todo-subitem input[type='checkbox']:not(:checked)");
-
-    return {
-        totalItems: allItems.length,
-        totalCheckedItems: allCheckedItems.length,
-        totalUncheckedItems: allUncheckedItems.length,
-        totalParentItems: parentItems.length,
-        totalParentCheckedItems: parentCheckedItems.length,
-        totalParentUncheckedItems: parentUncheckedItems.length,
-        totalChildItems: childItems.length,
-        totalChildCheckedItems: childCheckedItems.length,
-        totalChildUncheckedItems: childUncheckedItems.length
-    };
-}
-
-/**
- * Updates the window title
- * @param {title} - The title to be set. 
- */
 function updateWindowTitle(title){
     if(title != ""){
         document.title = `${title} - Kitten`;
@@ -379,29 +361,132 @@ function updateWindowTitle(title){
         document.title = "Kitten";
     }
 }
+//#endregion
 
-function updateProgressBar() {
-    const pb = document.getElementById('progress-bar');
-    const parentItems = list.querySelectorAll(".todo-item");
+//#region STATISTICS
+function getTodoCounts() {
+    let totalItems = 0;
+    let totalCheckedItems = 0;
+    let totalUncheckedItems = 0;
 
-    let total = parentItems.length;
-    let done = 0;
+    let totalParentItems = todoList.length;
+    let totalParentCheckedItems = 0;
+    let totalParentUncheckedItems = 0;
 
-    parentItems.forEach(item => {
-        const checkbox = item.querySelector(":scope > .todo-item-content > input[type='checkbox']");
-        if (checkbox && checkbox.checked) {
-            done++;
+    let totalChildItems = 0;
+    let totalChildCheckedItems = 0;
+    let totalChildUncheckedItems = 0;
+
+    for (const item of todoList) {
+        totalItems++;
+        if (item.completed) {
+            totalCheckedItems++;
+            totalParentCheckedItems++;
+        } else {
+            totalUncheckedItems++;
+            totalParentUncheckedItems++;
         }
-    });
 
-    if (pb && total > 0) {
-        const percent = (done / total) * 100;
-        pb.style.width = `${percent}%`;
-        pb.title = `${percent.toFixed(2)}%`;
-    } else {
-        pb.style.width = `0%`;
-        pb.title = `0%`;
+        for (const child of item.childItems) {
+            totalItems++;
+            totalChildItems++;
+            if (child.completed) {
+                totalCheckedItems++;
+                totalChildCheckedItems++;
+            } else {
+                totalUncheckedItems++;
+                totalChildUncheckedItems++;
+            }
+        }
     }
+
+    return {
+        totalItems,
+        totalCheckedItems,
+        totalUncheckedItems,
+        totalParentItems,
+        totalParentCheckedItems,
+        totalParentUncheckedItems,
+        totalChildItems,
+        totalChildCheckedItems,
+        totalChildUncheckedItems
+    };
+}
+//#endregion
+
+//#region LIST EDIT
+function orderByAlpha() {
+    function sortItems(items) {
+        items.sort((a, b) => a.name.localeCompare(b.name));
+        items.forEach(item => {
+            if (item.childItems && item.childItems.length > 0) {
+                sortItems(item.childItems);
+            }
+        });
+    }
+
+    sortItems(todoList);
+    save(true);
 }
 
-load();
+function groupChecked() {
+    function sortByChecked(items) {
+        items.sort((a, b) => {
+            if (a.completed === b.completed) return 0;
+            return a.completed ? -1 : 1;
+        });
+        items.forEach(item => {
+            if (item.childItems && item.childItems.length > 0) {
+                sortByChecked(item.childItems);
+            }
+        });
+    }
+
+    sortByChecked(todoList);
+    save();
+    renderTodoList();
+}
+
+function groupUnchecked() {
+    function sortByUnchecked(items) {
+        items.sort((a, b) => {
+            if (a.completed === b.completed) return 0;
+            return a.completed ? 1 : -1;
+        });
+        items.forEach(item => {
+            if (item.childItems && item.childItems.length > 0) {
+                sortByUnchecked(item.childItems);
+            }
+        });
+    }
+
+    sortByUnchecked(todoList);
+    save();
+    renderTodoList();
+}
+
+function deleteHighest() {
+    const first = document.querySelector("#list > .todo-item");
+    if (!first) return;
+
+    const label = first.querySelector("label");
+    if (!label) return;
+
+    const name = label.textContent.trim();
+    deleteTodoItem(name);
+    save(true);
+}
+
+function deleteLowest() {
+    const all = document.querySelectorAll("#list > .todo-item");
+    if (all.length === 0) return;
+
+    const last = all[all.length - 1];
+    const label = last.querySelector("label");
+    if (!label) return;
+
+    const name = label.textContent.trim();
+    deleteTodoItem(name);
+    save(true);
+}
+//#endregion
