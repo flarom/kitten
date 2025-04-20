@@ -1,0 +1,15 @@
+{
+    "name": "Google Chrome Dark",
+    "category": "Dark",
+    "variables": {
+        "--background-color": "#202124",
+        "--card-color": "#2d2e30",
+        "--field-color": "#2d2e30",
+        "--border-color": "#5f6368",
+        "--text-color": "#e8eaed",
+        "--icon-color": "#bdc1c6",
+        "--title-color": "#ffffff",
+        "--highlight-color": "#8ab4f8",
+        "--warning-color": "#ea4335"
+    }
+}

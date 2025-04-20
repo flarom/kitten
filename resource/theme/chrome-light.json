@@ -1,0 +1,15 @@
+{
+    "name": "Google Chrome Light",
+    "category": "Light",
+    "variables": {
+        "--background-color": "#ffffff",
+        "--card-color": "#f8f9fa",
+        "--field-color": "#ffffff",
+        "--border-color": "#dcdcdc",
+        "--text-color": "#202124",
+        "--icon-color": "#5f6368",
+        "--title-color": "#202124",
+        "--highlight-color": "#1a73e8",
+        "--warning-color": "#ea4335"
+    }
+}

@@ -1,15 +1,15 @@
 [
-    "cyberpunk.json",
     "github-dark.json",
     "github-light.json",
-    "gruvbox-dark.json",
     "hatsune-miku.json",
     "kasane-teto.json",
     "kitten.json",
     "monokai.json",
-    "ocean-breeze.json",
     "oled.json",
-    "sakura-blossom.json",
-    "solarized-dark.json",
-    "solarized-light.json"
+    "firefox-light.json",
+    "firefox-dark.json",
+    "chrome-light.json",
+    "chrome-dark.json",
+    "brave-light.json",
+    "brave-dark.json"
 ]

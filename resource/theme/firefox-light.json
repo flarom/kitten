@@ -1,0 +1,15 @@
+{
+    "name": "Mozilla Firefox Light",
+    "category": "Light",
+    "variables": {
+        "--background-color": "#ffffff",
+        "--card-color": "#f0f0f4",
+        "--field-color": "#ffffff",
+        "--border-color": "#9f9ea1",
+        "--text-color": "#18171d",
+        "--icon-color": "#18171d",
+        "--title-color": "#18171d",
+        "--highlight-color": "#0060df",
+        "--warning-color": "#ff7474"
+    }
+}

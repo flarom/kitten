@@ -1,0 +1,15 @@
+{
+    "name": "Brave Dark",
+    "category": "Dark",
+    "variables": {
+        "--background-color": "#1f1f1f",
+        "--card-color": "#282828",
+        "--field-color": "#282828",
+        "--border-color": "#4d4d4d",
+        "--text-color": "#eeeeee",
+        "--icon-color": "#eeeeee",
+        "--title-color": "#ffffff",
+        "--highlight-color": "#ff7139",
+        "--warning-color": "#ff6b6b"
+    }
+}

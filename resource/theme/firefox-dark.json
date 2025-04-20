@@ -1,0 +1,15 @@
+{
+    "name": "Mozilla Firefox Dark",
+    "category": "Dark",
+    "variables": {
+        "--background-color": "#1c1b22",
+        "--card-color": "#23222b",
+        "--field-color": "#23222b",
+        "--border-color": "#7c7b83",
+        "--text-color": "#fbfbfe",
+        "--icon-color": "#fbfbfe",
+        "--title-color": "#ffffff",
+        "--highlight-color": "#00ddff",
+        "--warning-color": "#ff7474"
+    }
+}
