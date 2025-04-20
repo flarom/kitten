@@ -315,6 +315,10 @@ input[type="checkbox"]:checked {
         padding-bottom: 20px;
     }
 
+    .todo-item:last-child {
+        margin-bottom: 100px;
+    }
+
     .create-button {
         background: var(--highlight-back);
         color: var(--highlight-color);

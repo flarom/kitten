@@ -290,25 +290,10 @@ async function renderTodoList() {
                 renderTodoList();
             }
         };
-
-        const delBtn = document.createElement("button");
-        delBtn.className = "icon-button delete-button";
-        delBtn.title = "Delete";
-        delBtn.setAttribute("translate", "no");
-        delBtn.textContent = "delete";
-        delBtn.onclick = () => {
-            if (isSubitem) {
-                const parentItem = todoList[parentIndex];
-                parentItem.childItems = parentItem.childItems.filter(child => child !== item);
-            } else {
-                todoList = todoList.filter(i => i !== item);
-            }
-            save();
-            renderTodoList();
-        };
-
         buttonDiv.appendChild(editBtn);
-        buttonDiv.appendChild(delBtn);
+
+        const menu = createItemMenu(item, isSubitem, parentIndex, itemId);
+        buttonDiv.appendChild(menu);
 
         content.appendChild(checkbox);
         content.appendChild(label);
@@ -336,6 +321,53 @@ async function renderTodoList() {
     });
 
     updateProgressBar();
+}
+
+function createItemMenu(item, isSubitem, parentIndex, itemId) {
+    const dropdown = document.createElement("div");
+    dropdown.className = "dropdown";
+
+    const menuButton = document.createElement("button");
+    menuButton.className = "icon-button dropdown-btn";
+    menuButton.setAttribute("translate", "no");
+    menuButton.textContent = "more_horiz";
+
+    const menuId = `${itemId}-menu`;
+    menuButton.setAttribute("onclick", `toggleDropdown('${menuId}')`);
+
+    const menu = document.createElement("div");
+    menu.className = "dropdown-content menu";
+    menu.id = menuId;
+
+    const tagBtn = document.createElement("button");
+    tagBtn.className = "text-button";
+    tagBtn.innerHTML = `<span class="icon" translate="no">sell</span>Tag`;
+
+    const separator = document.createElement("hr");
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "text-button";
+    deleteBtn.innerHTML = `<span class="icon" translate="no">delete</span>Delete`;
+    deleteBtn.onclick = () => {
+        if (isSubitem) {
+            const parentItem = todoList[parentIndex];
+            parentItem.childItems = parentItem.childItems.filter(child => child !== item);
+        } else {
+            todoList = todoList.filter(i => i !== item);
+        }
+        save();
+        renderTodoList();
+    };
+
+    if (!isSubitem) {
+        menu.appendChild(tagBtn);
+        menu.appendChild(separator);
+    }
+    menu.appendChild(deleteBtn);
+    dropdown.appendChild(menuButton);
+    dropdown.appendChild(menu);
+
+    return dropdown;
 }
 
 function updateProgressBar() {
