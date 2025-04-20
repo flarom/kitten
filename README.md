@@ -1,4 +1,4 @@
-# Kitten 🐾
+<img src="resource/branding/light-full.png" width="300" alt="Kitten Logo">
 
 Kitten is an **accountless**, **free** and **opensource** tasklist manager.
 
