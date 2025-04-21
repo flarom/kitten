@@ -343,7 +343,37 @@ function createItemMenu(item, isSubitem, parentIndex, itemId) {
     tagBtn.className = "text-button";
     tagBtn.innerHTML = `<span class="icon" translate="no">sell</span>Tag`;
 
-    const separator = document.createElement("hr");
+    const descBtn = document.createElement("button");
+    descBtn.className = "text-button";
+    descBtn.innerHTML = `<span class="icon" translate="no">description</span>Description`;
+
+    const genBtn = document.createElement("button");
+    genBtn.className = "text-button";
+    genBtn.innerHTML = `<span class="icon" translate="no">prompt_suggestion</span>Generate list`;
+    genBtn.onclick = async () => {
+        try {
+            const generated = await genTodoList(item.name);
+            if (Array.isArray(generated)) {
+                generated.forEach(task => {
+                    item.childItems.push({
+                        name: task,
+                        description: "",
+                        completed: false,
+                        childItems: [],
+                        tags: [],
+                    });
+                });
+                save();
+                renderTodoList();
+            } else {
+                alert("Could not generate a valid list");
+                console.warn("Invalid list format:", generated);
+            }
+        } catch (err) {
+            alert(`Error generating list: ${err.message}`);
+            console.error("Gen error:", err);
+        }
+    };
 
     const deleteBtn = document.createElement("button");
     deleteBtn.className = "text-button";
@@ -360,8 +390,10 @@ function createItemMenu(item, isSubitem, parentIndex, itemId) {
     };
 
     if (!isSubitem) {
+        menu.appendChild(descBtn);
         menu.appendChild(tagBtn);
-        menu.appendChild(separator);
+        menu.appendChild(genBtn);
+        menu.appendChild(document.createElement("hr"));
     }
     menu.appendChild(deleteBtn);
     dropdown.appendChild(menuButton);
@@ -520,5 +552,69 @@ function deleteLowest() {
     const name = label.textContent.trim();
     deleteTodoItem(name);
     save(true);
+}
+//#endregion
+
+//#region AI LIST GENERATION
+/**
+ * Get stored ChatGPT API key
+ * @returns {string|error} ChatGPT API key, or error if there's no key
+ */
+async function getGptKey() {
+    const key = localStorage.getItem("kittenGptKey");
+    if (!key) throw new Error("No API key found. Check settings");
+    return key;
+}
+
+/**
+ * Generates a todo list based on a prompt
+ * @param {string} prompt List title
+ * @param {string} model ChatGPT model
+ * @param {string} lang Prefered language
+ * @returns {string[]} Todo list as array of strings
+ */
+async function genTodoList(prompt, model = "gpt-4.1-nano") {
+    const apiKey = await getGptKey();
+    const endpoint = "https://api.openai.com/v1/chat/completions";
+
+    const messages = [
+        {
+            role: "system",
+            content: `You are a helpful assistant that generates a JavaScript array of strings for todo-lists. Your response must be ONLY a valid array, no explanations or additional text.`,
+        },
+        {
+            role: "user",
+            content: `Create a task-list based on: "${prompt}"`,
+        }
+    ];
+
+    const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+            model: model,
+            messages: messages,
+        })
+    });
+
+    const data = await response.json();
+
+    if (!data.choices || !data.choices[0]) {
+        throw new Error("Unexpected response from the model");
+    }
+
+    const content = data.choices[0].message.content;
+
+    try {
+        const parsed = JSON.parse(content);
+        if (!Array.isArray(parsed)) throw new Error("Not an array");
+        return parsed;
+    } catch {
+        console.warn("The response is not a clean JSON array. Returning raw text instead.");
+        return content.split(/\r?\n/).filter(line => line.trim().startsWith("- ")).map(line => line.replace(/^[-*]\s*/, ""));
+    }
 }
 //#endregion

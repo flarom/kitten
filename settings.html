@@ -17,7 +17,7 @@
         <a href="index.html"><span class="icon" translate="no">arrow_back</span> Go back</a>
         <h1>Settings</h1>
         <h2>Look and feel</h2>
-        <!-- #region color palette -->
+        <!-- #region look and feel -->
         <details name="setting">
             <summary>
                 <span class="center-flex"><span class="large-icon" translate="no">palette</span>Color palette</span>
@@ -71,9 +71,7 @@
                 <label for="--warning-color">Warning color</label>
             </div>
         </details>
-        <!-- #endregion -->
 
-        <!-- #region fonts -->
         <details name="setting">
             <summary>
                 <span class="center-flex"><span class="large-icon" translate="no">brand_family</span>Font</span>
@@ -87,9 +85,7 @@
             <label for="--font-size">Size</label><br>
             <input type="range" name="--font-size" id="--font-size" min="0.5" max="1.5" value="1" step="0.1" oninput="saveFont()">
         </details>
-        <!-- #endregion -->
 
-        <!-- #region wallpaper -->
         <details name="setting">
             <summary>
                 <span class="center-flex"><span class="large-icon" translate="no">wallpaper</span>Wallpaper</span>
@@ -120,20 +116,38 @@
         <hr>
 
         <h2>Data</h2>
-        <!-- #region task list -->
+        <!-- #region data -->
         <details name="setting">
             <summary><span class="center-flex"><span class="large-icon" translate="no">checklist</span>Manage task list</span>
             </summary>
             <button class="danger-button" data-action="clearListData()" title="Clear todo list [hold]">Clear</button>
         </details>
-        <!-- #endregion -->
-        <!-- #region settings -->
+
         <details name="setting">
             <summary><span class="center-flex"><span class="large-icon" translate="no">settings</span>Manage settings</span></summary>
             <button class="danger-button" data-action="clearSettings()" title="Clear settings [hold]">Clear</button>
         </details>
         <!-- #endregion -->
+        
         <hr>
+
+        <h2>TaskGPT</h2>
+        <details name="setting">
+            <summary><span class="center-flex"><span class="large-icon" translate="no">api</span>Manage API</span></summary>
+            <label for="gpt-api-key">API Key</label>
+            <input type="password" name="gpt-api-key" id="gpt-api-key" onchange="localStorage.setItem('kittenGptKey', document.getElementById('gpt-api-key').value)"><br>
+
+            <!-- <label for="gpt-model">ChatGPT Model</label><br>
+            <input type="text" name="gpt-model" id="gpt-model" placeholder="Example: gpt-4.1-nano"><br> -->
+
+            <button class="danger-button" data-action="localStorage.removeItem('kittenGptKey'); location.reload();" title="Clear my API data [hold]">Clear</button>
+            <a href="https://platform.openai.com/" target="_blank">OpenAI Plataform</a>
+        </details>
+
+        <hr>
+
+        <h2>About</h2>
+        <!-- #region about -->
         <details name="setting">
             <summary><span class="center-flex"><span class="large-icon" translate="no">info</span>About Kitten</span></summary>
             <div class="center-flex break-on-mobile">
@@ -163,6 +177,7 @@
                 </div>
             </div>
         </details>
+        <!-- #endregion -->
 
         <script src="script/settings.js"></script>
         <script src="script/todo.js"></script>
@@ -344,6 +359,7 @@
 
             loadPaletteIntoInputs();
             loadThemes();
+            document.getElementById('gpt-api-key').value = localStorage.getItem('kittenGptKey');
         </script>
     </div>
 </body>
