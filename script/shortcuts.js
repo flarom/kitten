@@ -23,11 +23,15 @@ document.addEventListener("keydown", function (event) {
         event.preventDefault();
         orderByAlpha();
     }
-    else if (event.shiftKey && event.key === "Delete") { // Delete - delete first list item
+    else if (event.shiftKey && event.key === "Delete") { // Shift + Delete - delete first list item
         event.preventDefault();
         deleteHighest();
     }
-    else if (event.key === "Delete") { // Shift + Delete - delete last list item
+    else if (event.ctrlKey && event.key === "Delete") { // Ctrl + Delete - delete all list items
+        event.preventDefault();
+        deleteAll();
+    }
+    else if (event.key === "Delete") { // Delete - delete last list item
         event.preventDefault();
         deleteLowest();
     }
@@ -59,7 +63,6 @@ async function showShortcuts(){
         <tr><td><kbd>Ctrl</kbd>+<kbd>I</kbd></td>       <td>Order list alphabetically</td></tr>
         <tr><td><kbd>Ctrl</kbd>+<kbd>U</kbd></td>       <td>Group selected items on the top</td></tr>
         <tr><td><kbd>Ctrl</kbd>+<kbd>Y</kbd></td>       <td>Group unsenected items in the top</td></tr>
-        <tr><td><kbd>F1</kbd></td>                      <td>Open help</td></tr>
         <tr><td><kbd>F2</kbd></td>                      <td>Rename document</td></tr>
     </table>
     `);
