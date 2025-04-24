@@ -342,6 +342,9 @@ function createItemMenu(item, isSubitem, parentIndex, itemId) {
     const tagBtn = document.createElement("button");
     tagBtn.className = "text-button";
     tagBtn.innerHTML = `<span class="icon" translate="no">sell</span>Tag`;
+    tagBtn.onclick = async () => {
+        let fodase = promptSelect("Select a tag", ["tag1", "tag2", "tag3"]);
+    }
 
     const descBtn = document.createElement("button");
     descBtn.className = "text-button";
@@ -552,6 +555,14 @@ function deleteLowest() {
     const name = label.textContent.trim();
     deleteTodoItem(name);
     save(true);
+}
+
+function deleteAll() {
+    const confirmDelete = confirm("Are you sure you want to delete all items? This action cannot be undone.");
+    if (confirmDelete) {
+        todoList = [];
+        save(true);
+    }
 }
 //#endregion
 
