@@ -43,9 +43,13 @@ document.addEventListener("keydown", function (event) {
         event.preventDefault();
         importJson();
     }
-    else if (event.key === "/") { // /- shortcuts
+    else if (event.key === "/") { // / - shortcuts
         event.preventDefault();
         showShortcuts();
+    }
+    else if (event.altKey && event.key === "t") { // Alt + T - manage tags
+        event.preventDefault();
+        showTagsManager();
     }
 });
 
@@ -53,7 +57,7 @@ async function showShortcuts(){
     promptMessage(`
     <h1 style='display:flex;align-items:center;gap:10px'><span class="large-icon">keyboard_keys</span>Keyboard Shortcuts</h1>
     <table>
-        <tr><th>Shortcut</th>                           <th>Action</th></tr>
+        <tr><th></th><th>Shortcut</th>                           <th>Action</th></tr>
         <tr><td><kbd>Ctrl</kbd>+<kbd>S</kbd></td>       <td>Save file as .kitten.json</td></tr>
         <tr><td><kbd>Ctrl</kbd>+<kbd>O</kbd></td>       <td>Open .kitten.json document</td></tr>
         <tr><td><kbd>Ctrl</kbd>+<kbd>K</kbd></td>       <td>Add new item</td></tr>
@@ -63,6 +67,8 @@ async function showShortcuts(){
         <tr><td><kbd>Ctrl</kbd>+<kbd>I</kbd></td>       <td>Order list alphabetically</td></tr>
         <tr><td><kbd>Ctrl</kbd>+<kbd>U</kbd></td>       <td>Group selected items on the top</td></tr>
         <tr><td><kbd>Ctrl</kbd>+<kbd>Y</kbd></td>       <td>Group unsenected items in the top</td></tr>
+        <tr><td><kbd>Alt</kbd>+<kbd>T</kbd></td>        <td>Manage tags</td></tr>
+        <tr><td><kbd>/</kbd></td>                       <td>Show shortcuts</td></tr>
         <tr><td><kbd>F2</kbd></td>                      <td>Rename document</td></tr>
     </table>
     `);

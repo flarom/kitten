@@ -15,7 +15,23 @@ const tag = {
 }
 
 const icons = [
-    "star", "search", "home", "favorite", "bedtime", "pill", "priority_high", "celebration", "bookmark", "today", "mail", "call", "shopping_cart", "sell", "work", "location_on"
+    "sell",
+    "bookmark",
+    "priority_high",
+    "star",
+    "favorite",
+    "search",
+    "home",
+    "bedtime",
+    "pill",
+    "celebration",
+    "today",
+    "mail",
+    "call",
+    "shopping_cart",
+    "travel",
+    "work",
+    "location_on"
 ]
 
 let todoList = [];
@@ -343,7 +359,7 @@ function createItemMenu(item, isSubitem, parentIndex, itemId) {
     tagBtn.className = "text-button";
     tagBtn.innerHTML = `<span class="icon" translate="no">sell</span>Tag`;
     tagBtn.onclick = async () => {
-        let fodase = promptSelect("Select a tag", ["tag1", "tag2", "tag3"]);
+        let newTag = promptSelect("Select a tag", ["tag1", "tag2", "tag3"]);
     }
 
     const descBtn = document.createElement("button");

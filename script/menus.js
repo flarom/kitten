@@ -40,69 +40,36 @@ function promptString(title, defaultText="") {
     return new Promise((resolve) => {
         // overlay
         const overlay = document.createElement('div');
-        overlay.style.position = 'fixed';
-        overlay.style.top = '0';
-        overlay.style.left = '0';
-        overlay.style.width = '100vw';
-        overlay.style.height = '100vh';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
-        overlay.style.backdropFilter = 'blur(2px)';
-        overlay.style.display = 'flex';
-        overlay.style.justifyContent = 'center';
-        overlay.style.alignItems = 'center';
-        overlay.style.zIndex = '1000';
+        overlay.className = 'prompt-overlay';
 
         // dialog
         const dialog = document.createElement('div');
-        dialog.style.backgroundColor = 'var(--card-color)';
-        dialog.style.padding = '20px';
-        dialog.style.border = '1px solid var(--border-color)'
-        dialog.style.borderRadius = '15px';
-        dialog.style.width = '300px';
+        dialog.className = 'prompt-dialog';
 
         // title
         const titleElement = document.createElement('p');
         titleElement.textContent = title;
-        titleElement.style.marginBottom = '15px';
+        titleElement.className = 'prompt-title';
         dialog.appendChild(titleElement);
 
         // field
         const input = document.createElement('input');
         input.type = 'text';
         input.value = defaultText ? defaultText : ""
-        input.style.background = 'var(--field-color)';
-        input.style.color = 'var(--text-color)';
-        input.style.width = 'calc(100% - 40px';
-        input.style.height = '30px';
-        input.style.padding = '0px 20px 0px 20px';
-        input.style.marginBottom = '15px';
-        input.style.border = '1px solid var(--border-color)';
-        input.style.outline = 'none';
-        input.style.borderRadius = '15px';
+        input.className = 'prompt-input';
         dialog.appendChild(input);
 
         // buttons
         const buttonContainer = document.createElement('div');
-        buttonContainer.style.display = 'flex';
-        buttonContainer.style.gap = '10px';
+        buttonContainer.className = 'prompt-buttons';
 
         const cancelButton = document.createElement('button');
         cancelButton.textContent = 'Cancel';
-        cancelButton.style.padding = '5px 30px';
-        cancelButton.style.border = '1px solid var(--border-color)';
-        cancelButton.style.borderRadius = '15px';
-        cancelButton.style.backgroundColor = 'transparent';
-        cancelButton.style.color = 'white';
-        cancelButton.style.cursor = 'pointer';
+        cancelButton.className = 'prompt-button cancel';
 
         const submitButton = document.createElement('button');
         submitButton.textContent = 'Submit';
-        submitButton.style.padding = '5px 30px';
-        submitButton.style.border = '1px solid var(--highlight-color)';
-        submitButton.style.borderRadius = '15px';
-        submitButton.style.backgroundColor = 'var(--highlight-back)';
-        submitButton.style.color = 'white';
-        submitButton.style.cursor = 'pointer';
+        submitButton.className = 'prompt-button submit';
 
         buttonContainer.appendChild(cancelButton);
         buttonContainer.appendChild(submitButton);
@@ -135,43 +102,21 @@ function promptSelect(title, options = [], defaultOption = "") {
     return new Promise((resolve) => {
         // overlay
         const overlay = document.createElement('div');
-        overlay.style.position = 'fixed';
-        overlay.style.top = '0';
-        overlay.style.left = '0';
-        overlay.style.width = '100vw';
-        overlay.style.height = '100vh';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
-        overlay.style.backdropFilter = 'blur(2px)';
-        overlay.style.display = 'flex';
-        overlay.style.justifyContent = 'center';
-        overlay.style.alignItems = 'center';
-        overlay.style.zIndex = '1000';
+        overlay.className = 'prompt-overlay';
 
         // dialog
         const dialog = document.createElement('div');
-        dialog.style.backgroundColor = 'var(--card-color)';
-        dialog.style.padding = '20px';
-        dialog.style.border = '1px solid var(--border-color)';
-        dialog.style.borderRadius = '15px';
-        dialog.style.width = '300px';
+        dialog.className = 'prompt-dialog';
 
         // title
         const titleElement = document.createElement('p');
         titleElement.textContent = title;
-        titleElement.style.marginBottom = '15px';
+        titleElement.className = 'prompt-title';
         dialog.appendChild(titleElement);
 
         // combo-box
         const select = document.createElement('select');
-        select.style.width = '100%';
-        select.style.height = '35px';
-        select.style.borderRadius = '15px';
-        select.style.border = '1px solid var(--border-color)';
-        select.style.background = 'var(--field-color)';
-        select.style.color = 'var(--text-color)';
-        select.style.marginBottom = '15px';
-        select.style.padding = '0px 10px';
-        select.style.outline = 'none';
+        select.className = 'prompt-select';
 
         options.forEach((opt) => {
             const optionElement = document.createElement('option');
@@ -187,26 +132,15 @@ function promptSelect(title, options = [], defaultOption = "") {
 
         // buttons
         const buttonContainer = document.createElement('div');
-        buttonContainer.style.display = 'flex';
-        buttonContainer.style.gap = '10px';
+        buttonContainer.className = 'prompt-buttons';
 
         const cancelButton = document.createElement('button');
         cancelButton.textContent = 'Cancel';
-        cancelButton.style.padding = '5px 30px';
-        cancelButton.style.border = '1px solid var(--border-color)';
-        cancelButton.style.borderRadius = '15px';
-        cancelButton.style.backgroundColor = 'transparent';
-        cancelButton.style.color = 'white';
-        cancelButton.style.cursor = 'pointer';
+        cancelButton.className = 'prompt-button cancel';
 
         const submitButton = document.createElement('button');
         submitButton.textContent = 'Submit';
-        submitButton.style.padding = '5px 30px';
-        submitButton.style.border = '1px solid var(--highlight-color)';
-        submitButton.style.borderRadius = '15px';
-        submitButton.style.backgroundColor = 'var(--highlight-back)';
-        submitButton.style.color = 'white';
-        submitButton.style.cursor = 'pointer';
+        submitButton.className = 'prompt-button submit';
 
         buttonContainer.appendChild(cancelButton);
         buttonContainer.appendChild(submitButton);
@@ -239,24 +173,11 @@ function promptMessage(htmlContent) {
     return new Promise((resolve) => {
         // overlay
         const overlay = document.createElement('div');
-        overlay.style.position = 'fixed';
-        overlay.style.top = '0';
-        overlay.style.left = '0';
-        overlay.style.width = '100vw';
-        overlay.style.height = '100vh';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
-        overlay.style.backdropFilter = 'blur(2px)';
-        overlay.style.display = 'flex';
-        overlay.style.justifyContent = 'center';
-        overlay.style.alignItems = 'center';
-        overlay.style.zIndex = '1000';
+        overlay.className = 'prompt-overlay';
 
         // dialog
         const dialog = document.createElement('div');
-        dialog.style.backgroundColor = 'var(--card-color)';
-        dialog.style.padding = '20px';
-        dialog.style.border = '1px solid var(--border-color)';
-        dialog.style.borderRadius = '15px';
+        dialog.className = 'prompt-dialog';
         dialog.style.width = '100%';
         dialog.style.maxWidth = '500px';
 
@@ -269,13 +190,7 @@ function promptMessage(htmlContent) {
         // ok button
         const okButton = document.createElement('button');
         okButton.textContent = 'Ok';
-        okButton.style.padding = '5px 30px';
-        okButton.style.border = '1px solid var(--highlight-color)';
-        okButton.style.borderRadius = '15px';
-        okButton.style.backgroundColor = 'var(--highlight-back)';
-        okButton.style.color = 'white';
-        okButton.style.cursor = 'pointer';
-        okButton.style.display = 'block';
+        okButton.className = 'prompt-button submit';
 
         dialog.appendChild(okButton);
         overlay.appendChild(dialog);
@@ -295,5 +210,158 @@ function promptMessage(htmlContent) {
         });
 
         okButton.focus();
+    });
+}
+
+function promptTagsEditor(tags = [], iconOptions = []) {
+    return new Promise((resolve) => {
+        const overlay = document.createElement('div');
+        overlay.className = 'prompt-overlay';
+
+        const dialog = document.createElement('div');
+        dialog.className = 'prompt-dialog';
+
+        const tagList = document.createElement('div');
+        tagList.className = 'prompt-list';
+        dialog.appendChild(tagList);
+
+        function renderTags() {
+            tagList.innerHTML = '';
+            tags.forEach((tag, index) => {
+                const tagItem = document.createElement('div');
+                tagItem.style.display = 'flex';
+                tagItem.style.justifyContent = 'space-between';
+                tagItem.style.alignItems = 'center';
+                tagItem.style.background = 'var(--field-color)';
+                tagItem.style.padding = '5px 10px';
+                tagItem.style.borderRadius = '10px';
+
+                const icon = document.createElement('span');
+                icon.textContent = `${tag.icon}`;
+                icon.style.fontFamily = 'Material Symbols Outlined';
+
+                const text = document.createElement('span');
+                text.textContent = `${tag.name}`;
+
+                const remove = document.createElement('button');
+                remove.textContent = '✖';
+                remove.style.background = 'transparent';
+                remove.style.border = 'none';
+                remove.style.color = 'var(--text-color)';
+                remove.style.cursor = 'pointer';
+
+                remove.addEventListener('click', () => {
+                    tags.splice(index, 1);
+                    renderTags();
+                });
+
+                tagItem.appendChild(icon);
+                tagItem.appendChild(text);
+                tagItem.appendChild(remove);
+                tagList.appendChild(tagItem);
+            });
+        }
+
+        renderTags();
+
+        const inputContainer = document.createElement('div');
+        inputContainer.style.display = 'flex';
+        inputContainer.style.gap = '0.5rem';
+        inputContainer.style.alignItems = 'center';
+        inputContainer.style.paddingBottom = '30px';
+
+        const iconSelect = document.createElement('select');
+        iconSelect.className = 'prompt-select';
+        iconSelect.style.fontFamily = 'Material Symbols Outlined';
+        iconSelect.style.fontSize = 'large';
+        iconSelect.style.width = '4rem';
+        iconSelect.style.minWidth = 'unset';
+        iconSelect.style.flexShrink = '0';
+        iconSelect.style.textAlign = 'center';
+
+        const nameInput = document.createElement('input');
+        nameInput.placeholder = 'Tag name';
+        nameInput.className = 'prompt-input';
+        nameInput.style.flex = '1';
+
+        iconOptions.forEach(icon => {
+            const opt = document.createElement('option');
+            opt.value = icon;
+            opt.textContent = icon;
+            iconSelect.appendChild(opt);
+        });
+
+        const addButton = document.createElement('button');
+        addButton.textContent = 'add';
+        addButton.className = 'prompt-button';
+        addButton.style.fontFamily = 'Material Symbols Outlined';
+        addButton.style.fontSize = 'large';
+        addButton.style.flexShrink = '0';
+        addButton.style.height = '30px';
+        addButton.style.paddingLeft = '10px';
+        addButton.style.paddingRight = '10px';
+
+        addButton.addEventListener('click', () => {
+            const name = nameInput.value.trim();
+            const icon = iconSelect.value;
+            if (name) {
+                tags.push({ name, icon });
+                nameInput.value = '';
+                iconSelect.selectedIndex = 0;
+                renderTags();
+            }
+        });
+
+        const buttonContainer = document.createElement('div');
+        buttonContainer.style.display = 'flex';
+        buttonContainer.style.gap = '10px';
+
+        const cancelButton = document.createElement('button');
+        cancelButton.textContent = 'Cancel';
+        cancelButton.className = 'prompt-button';
+
+        const submitButton = document.createElement('button');
+        submitButton.textContent = 'Save';
+        submitButton.className = 'prompt-button submit';
+
+        inputContainer.appendChild(iconSelect);
+        inputContainer.appendChild(nameInput);
+        inputContainer.appendChild(addButton);
+
+        buttonContainer.appendChild(cancelButton);
+        buttonContainer.appendChild(submitButton);
+
+        dialog.appendChild(inputContainer);
+        dialog.appendChild(buttonContainer);
+        overlay.appendChild(dialog);
+        document.body.appendChild(overlay);
+
+        function closePrompt(result) {
+            document.body.removeChild(overlay);
+            resolve(result);
+        }
+
+        cancelButton.addEventListener('click', () => closePrompt(null));
+        submitButton.addEventListener('click', () => {
+            const name = nameInput.value.trim();
+            const icon = iconSelect.value;
+        
+            if (name) {
+                tags.push({ name, icon });
+                nameInput.value = '';
+                iconSelect.selectedIndex = 0;
+            }
+        
+            renderTags();
+            closePrompt(tags);
+        });
+
+        overlay.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closePrompt(null);
+            }
+        });
+
+        nameInput.focus();
     });
 }

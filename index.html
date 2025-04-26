@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="style/style.css">
     <link rel="stylesheet" href="style/palette.css">
     <link rel="stylesheet" href="style/containers.css">
+    <link rel="stylesheet" href="style/prompts.css">
     <link rel="shortcut icon" href="resource/favicon.png" type="image/x-icon">
 </head>
 
@@ -25,6 +26,8 @@
                     <button class="text-button" onclick="importJson()"><span class="icon" translate="no">folder_open</span>Open file <kbd>Ctrl+O</kbd></button>
                     <hr>
                     <button class="text-button" onclick="exportMd()"><span class="icon" translate="no">markdown</span>Export Markdown</button>
+                    <hr>
+                    <button class="text-button" onclick="showTagsManager()"><span class="icon" translate="no">sell</span>Manage tags <kbd>Alt+T</kbd></button>
                     <hr>
                     <button class="text-button" onclick="window.open('settings.html', '_self').focus();"><span class="icon" translate="no">settings</span>Settings</button>
                     <button class="text-button" onclick="showShortcuts()"><span class="icon" translate="no">keyboard_keys</span>Keyboard shortcuts <kbd>/</kbd></button>
@@ -48,6 +51,15 @@
     <script>
         load();
         renderTodoList();
+
+        function showTagsManager() {
+            promptTagsEditor(tags, icons).then(result => {
+                if (result !== null) {
+                    tags = result;
+                    save(true);
+                }
+            });
+        }
     </script>
 </body>
 
