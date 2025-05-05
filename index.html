@@ -61,6 +61,7 @@
             const filename = await promptString("Compact Agenda Tree file name:", today);
             if (filename) {
                 todoBook.exportBook(filename);
+                showSnackBar("Downloading as CAT");
             }
         }
 
@@ -69,6 +70,7 @@
             const filename = await promptString("Markdown Document file name:", today);
             if (filename) {
                 todoBook.exportMdBook(filename);
+                showSnackBar("Downloading as MD");
             }
         }
 

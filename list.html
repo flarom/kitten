@@ -62,7 +62,7 @@
             todoList.renderList();
             
             const titlebox = document.getElementById('list-title-input');
-            document.title = `${todoList.title}`;
+            document.title = `${todoList.title.trim() === "" ? "Untitled list" : todoList.title}`;
             titlebox.value = todoList.title;
         };
 
@@ -102,7 +102,7 @@
                 todoBook.lists[listIndex].title = titlebox.value;
             }
         
-            document.title = `${todoList.title}`;
+            document.title = `${todoList.title.trim() === "" ? "Untitled list" : todoList.title}`;
             save();
         }
 

@@ -48,6 +48,8 @@ To create a custom theme for Kitten, follow these steps:
 ]
 ```
 Your theme should appear in `Settings > Color Palette > "Select a theme preset"`.
-Please note that you can only easly do this in the desktop version.
+Please note that you can only easly do this in the desktop version
 
-<p align="center"><img src="resource/branding/light-tiny.png" width="45"></p>
+---
+
+Made with ❤️ by [flarom](https://github.com/flarom).

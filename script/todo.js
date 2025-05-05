@@ -138,7 +138,7 @@ let todoBook = {
             const percent = total > 0 ? (done / total) * 100 : 0;
 
             titleDiv.innerHTML = `
-                <h3 translate="no">${list.title}</h3>
+                <h3 translate="no">${list.title.trim() === "" ? "<i>Untitled</i>" : list.title}</h3>
                 <div class="progress-wrapper">
                     <div class="progress-bar" style="width: ${percent}%; background-color: ${list.color};" title="${percent.toFixed(2)}% (${done}/${total})"></div>
                 </div>
@@ -164,7 +164,7 @@ let todoBook = {
                     checked: false,
                     subitems: []
                 });
-            
+                showSnackBar("Added item")
                 save();
                 this.renderTodoBook(filteredLists);
             };
