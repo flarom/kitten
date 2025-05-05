@@ -79,7 +79,7 @@ let todoBook = {
     },    
 
     exportMdBook: function(filename = "kittentodobook") {
-        let md = `#${filename}`;
+        let md = `#${filename}\n`;
         for (const list of this.lists) {
             md += `## ${list.title}\n`;
             for (const item of list.items) {
