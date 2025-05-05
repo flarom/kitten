@@ -1,429 +1,622 @@
-const listContainer = document.getElementById("list");
-const listTitle = document.getElementById("list-title");
+//#region todo book
+let todoBook = {
+    lists: [],
 
-const todoItem = {
-    name: "",           // item name
-    description: "",    // item description
-    completed: false,   // determines if the todo item is checked
-    tags: [],           // array of tags
-    childItems: [],     // array of child todoItems
-}
-
-const tag = {
-    name: "",   // tag name
-    icon: "",   // icon
-}
-
-const icons = [
-    "sell",
-    "bookmark",
-    "priority_high",
-    "star",
-    "favorite",
-    "search",
-    "home",
-    "bedtime",
-    "pill",
-    "celebration",
-    "today",
-    "mail",
-    "call",
-    "shopping_cart",
-    "travel",
-    "work",
-    "location_on"
-]
-
-let todoList = [];
-let tags = [];
-
-//#region CRUD
-    //#region CRUD TODO ITEMS
-    async function createTodoItem(name, description = "", tags = [], childItems = []) {
-        if (!name) {
-            name = await promptString("New item name:");
-        }
-        if (!name) return;
-
-        const newItem = {
-            name,
-            description,
-            completed: false,
-            childItems,
-            tags
-        };
-        todoList.push(newItem);
-
-        save(true);
-
-        return newItem;
-    }
-    
-    function readTodoItem(name) {
-        return todoList.find(item => item.name === name);
-    }
-    
-    function updateTodoItem(name, updates) {
-        const item = todoList.find(item => item.name === name);
-        if (!item) return null;
-    
-        Object.assign(item, updates);
-
-        save(true);
-
-        return item;
-    }
-    
-    function deleteTodoItem(name) {
-        const index = todoList.findIndex(item => item.name === name);
-        if (index !== -1) {
-            const removed = todoList.splice(index, 1);
-            return removed[0];
-        }
-
-        save(true);
-
-        return null;
-    }
-    //#endregion
-    //#region CRUD TAGS
-    function createTag(name, icon) {
-        const tagExists = tags.some(tag => tag.name === name);
-        if (tagExists) return null;
-    
-        const newTag = { name, icon };
-        tags.push(newTag);
-
+    createList: function(title, color = "#000000", warp = false) {
+        const id = generateUniqueId(this.lists);
+        this.lists.push({
+            id,
+            title,
+            color,
+            items: []
+        });
         save();
 
-        return newTag;
-    }
-    
-    function readTag(name) {
-        return tags.find(tag => tag.name === name);
-    }
-    
-    function updateTag(name, updates) {
-        const tag = tags.find(tag => tag.name === name);
-        if (!tag) return null;
-    
-        Object.assign(tag, updates);
+        if (warp) {window.open(`list.html?list=${id}`, '_self')}
+    },
 
+    deleteList: function(id) {
+        this.lists = this.lists.filter(list => list.id !== id);
         save();
+    },
 
-        return tag;
-    }
-    
-    function deleteTag(name) {
-        const index = tags.findIndex(tag => tag.name === name);
-        if (index !== -1) {
-            const removed = tags.splice(index, 1);
-            return removed[0];
-        }
-
+    renameList: function(id, newTitle) {
+        const list = this.lists.find(list => list.id === id);
+        if (list) list.title = newTitle;
         save();
+    },
 
-        return null;
-    }
-    //#endregion
-//#endregion
+    recolorList: function(id, newColor) {
+        const list = this.lists.find(list => list.id === id);
+        if (list) list.color = newColor;
+        save();
+    },
 
-//#region LOCAL STORAGE
-function save(update = false) {
-    localStorage.setItem("kitten_todoListTitle", listTitle.value);
-    localStorage.setItem("kitten_todoList", JSON.stringify(todoList));
-    localStorage.setItem("kitten_tags", JSON.stringify(tags));
-    console.info("SAVED TODO LIST TITLE\n" + localStorage.getItem("kitten_todoListTitle"));
-    console.info("SAVED TODO ITEMS\n" + localStorage.getItem("kitten_todoList"));
-    console.info("SAVED TAGS\n" + localStorage.getItem("kitten_tags"));
+    exportBook: function(filename = "kittentodobook") {
+        const dataStr = JSON.stringify({ KittenTodoBook: { lists: this.lists } }, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${filename}.cat`;
+        a.click();
+    },
 
-    updateWindowTitle(listTitle.value);
-
-    if (update) {
-        renderTodoList();
-    }
-}
-
-function load() {
-    const savedTitle = localStorage.getItem("kitten_todoListTitle");
-    const savedList = localStorage.getItem("kitten_todoList");
-    const savedTags = localStorage.getItem("kitten_tags");
+    importBook: function(rewrite = false) {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = ".cat";
+        input.onchange = e => {
+            const file = e.target.files[0];
+            if (!file) return;
     
-    if (savedTitle) listTitle.value = savedTitle;
-    if (savedList) todoList = JSON.parse(savedList);
-    if (savedTags) tags = JSON.parse(savedTags);
-}
-
-function clearListData() {
-    localStorage.removeItem("kitten_todoListTitle");
-    localStorage.removeItem("kitten_todoList");
-    window.open('index.html', '_this');
-}
-
-function clearTagsData() {
-    localStorage.removeItem("kitten_tags");
-    window.open('index.html', '_this');
-}
-//#endregion
-
-//#region FILE MANAGEMENT
-function exportJson() {
-    const data = {
-        title: listTitle.value || "todo",
-        todoList,
-        tags
-    };
-
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `${data.title}.kitten.json`;
-    a.click();
-}
-
-function importJson() {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = ".json";
-
-    input.onchange = (event) => {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try {
-                const data = JSON.parse(e.target.result);
-                if (data.todoList && data.tags) {
-                    todoList = data.todoList;
-                    tags = data.tags;
-                    listTitle.value = data.title || "";
-                    save(true);
-                } else {
-                    alert("invalid file");
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    const json = JSON.parse(reader.result);
+                    const newLists = json.KittenTodoBook?.lists;
+                    if (!Array.isArray(newLists)) return;
+    
+                    if (rewrite) {
+                        this.lists = [];
+                    }
+    
+                    newLists.forEach(list => {
+                        const uniqueId = generateUniqueId(this.lists);
+                        list.id = uniqueId;
+                        this.lists.push(list);
+                    });
+    
+                    save();
+                    this.renderTodoBook();
+                } catch (e) {
+                    console.error("invalid file");
                 }
-            } catch (err) {
-                alert("Failed to import file");
-            }
+            };
+            reader.readAsText(file);
         };
+        input.click();
+    },    
 
-        reader.readAsText(file);
-    };
+    exportMdBook: function(filename = "kittentodobook") {
+        let md = `#${filename}`;
+        for (const list of this.lists) {
+            md += `## ${list.title}\n`;
+            for (const item of list.items) {
+                md += this.generateMdItem(item, 0);
+            }
+        }
 
-    input.click();
-}
+        const blob = new Blob([md], { type: "text/markdown" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${filename}.md`;
+        a.click();
+    },
 
-function exportMd() {
-    const title = `# ${listTitle.value || "todo"}\n`;
-
-    function renderItem(item, depth = 0) {
-        const prefix = "    ".repeat(depth);
-        const checkbox = item.completed ? "[x]" : "[ ]";
-        let line = `${prefix}- ${checkbox} ${item.name}\n`;
-        if (item.childItems && item.childItems.length > 0) {
-            for (const child of item.childItems) {
-                line += renderItem(child, depth + 1);
+    generateMdItem: function(item, depth = 0) {
+        let line = "    ".repeat(depth);
+        line += `- [${item.checked === "true" ? "x" : " "}] ${item.name}\n`;
+        if (Array.isArray(item.subitems)) {
+            for (const sub of item.subitems) {
+                line += this.generateMdItem(sub, depth + 1);
             }
         }
         return line;
-    }
+    },
 
-    let content = title;
-    for (const item of todoList) {
-        content += renderItem(item);
-    }
+    renderTodoBook: function(filteredLists = null) {
+        const container = document.getElementById("todoBook");
+        if (!container) return;
+    
+        container.innerHTML = "";
+    
+        const listsToRender = filteredLists ?? this.lists;
+    
+        if (!listsToRender.length) {
+            container.innerHTML = `
+                <div class='placeholder-graphic'>
+                    <img src='resource/placeholder2.png'>
+                    <h2 style="color: var(--highlight-color)">Nothing planned</h2>
+                    <p>Tap the <kbd>+</kbd> and let’s get things rolling!</p>
+                </div>
+            `;
+            return;
+        }
+    
+        for (const list of listsToRender) {
+            const listDiv = document.createElement("div");
+            listDiv.className = "todo-book-item";
+            listDiv.style.borderLeftColor = list.color;
+    
+            const titleDiv = document.createElement("div");
+            titleDiv.className = "title-div";
+            const items = list.items || [];
+            const total = items.length;
+            const done = items.filter(item => item.checked === true || item.checked === "true").length;
+            const percent = total > 0 ? (done / total) * 100 : 0;
 
-    const blob = new Blob([content], { type: "text/markdown" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `${listTitle.value || "todo"}.md`;
-    a.click();
-}
-//#endregion
+            titleDiv.innerHTML = `
+                <h3 translate="no">${list.title}</h3>
+                <div class="progress-wrapper">
+                    <div class="progress-bar" style="width: ${percent}%; background-color: ${list.color};" title="${percent.toFixed(2)}% (${done}/${total})"></div>
+                </div>
+            `;
+    
+            const btnDiv = document.createElement("div");
+            btnDiv.className = "todo-book-item-buttons";
 
-//#region TODO TO HTML
-async function renderTodoList() {
-    listContainer.innerHTML = "";
-
-    function createItemElement(item, isSubitem = false, parentIndex = "") {
-        const itemId = `listItem${Math.floor(Math.random() * 1000000)}`; // random id
-        const wrapper = document.createElement("div");
-        wrapper.className = isSubitem ? "todo-subitem" : "todo-item";
-        wrapper.id = itemId;
-
-        const content = document.createElement("div");
-        content.className = "todo-item-content";
-
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.checked = item.completed;
-        checkbox.onchange = () => {
-            item.completed = checkbox.checked;
-            save();
-            renderTodoList();
-        };
-
-        const label = document.createElement("label");
-        label.textContent = item.name;
-        label.setAttribute("translate", "no");
-
-        const buttonDiv = document.createElement("div");
-        buttonDiv.className = "button-div";
-
-        if (!isSubitem) {
             const addBtn = document.createElement("button");
-            addBtn.className = "icon-button add-subitem-button";
-            addBtn.title = "Add Subitem";
-            addBtn.setAttribute("translate", "no");
+            addBtn.className = "icon-button add-button";
             addBtn.textContent = "add";
-            addBtn.onclick = async () => {
-                const subName = await promptString("New subitem name");
-                if (subName) {
-                    item.childItems.push({
-                        name: subName,
-                        description: "",
-                        completed: false,
-                        childItems: [],
-                        tags: []
-                    });
+            addBtn.onclick = async (e) => {
+                e.stopPropagation();
+                const name = await promptString("New item:");
+                if (!name) return;
+            
+                list.items = list.items || [];
+                const id = generateUniqueId(list.items);
+            
+                list.items.push({
+                    id,
+                    name,
+                    checked: false,
+                    subitems: []
+                });
+            
+                save();
+                this.renderTodoBook(filteredLists);
+            };
+            btnDiv.appendChild(addBtn);
+    
+            const editBtn = document.createElement("button");
+            editBtn.className = "icon-button";
+            editBtn.textContent = "edit";
+            editBtn.onclick = async (e) => {
+                e.stopPropagation();
+                const result = await promptListUpdate(list.title, list.color);
+                if (result) {
+                    list.title = result.title;
+                    list.color = result.color;
                     save();
-                    renderTodoList();
+                    this.renderTodoBook(filteredLists);
                 }
             };
-            buttonDiv.appendChild(addBtn);
-        }
+            btnDiv.appendChild(editBtn);
 
-        const editBtn = document.createElement("button");
-        editBtn.className = "icon-button edit-button";
-        editBtn.title = "Edit";
-        editBtn.setAttribute("translate", "no");
-        editBtn.textContent = "edit";
-        editBtn.onclick = async () => {
-            const newName = await promptString("New name:", item.name);
-            if (newName !== null) {
-                item.name = newName;
+    
+            const deleteBtn = document.createElement("button");
+            deleteBtn.classList = "icon-button delete-button";
+            deleteBtn.textContent = "delete";
+            deleteBtn.onclick = (e) => {
+                e.stopPropagation();
+                const skipConfirmation = e.shiftKey;
+            
+                if (skipConfirmation || confirm(`Sure you want to delete "${list.title}"?`)) {
+                    this.lists = this.lists.filter(l => l.id !== list.id);
+                    save();
+                    this.renderTodoBook();
+                }
+            };
+    
+            btnDiv.appendChild(editBtn);
+            btnDiv.appendChild(deleteBtn);
+    
+            listDiv.appendChild(titleDiv);
+            listDiv.appendChild(btnDiv);
+    
+            listDiv.onclick = () => {
+                window.open(`list.html?list=${list.id}`, "_self");
+            };
+    
+            container.appendChild(listDiv);
+        }
+    },
+
+    getStat: function () {
+        const listCount = this.lists.length;
+    
+        const jsonStr = JSON.stringify(this);
+        const byteSize = new Blob([jsonStr]).size;
+    
+        let sizeString;
+        if (byteSize < 1024 * 1024) {
+            sizeString = (byteSize / 1024).toFixed(2) + "Kb";
+        } else {
+            sizeString = (byteSize / (1024 * 1024)).toFixed(2) + "Mb";
+        }
+    
+        return {
+            listCount,
+            estimatedSize: sizeString
+        };
+    },
+
+    deleteBook: function() {
+        this.lists = [];
+        save();
+        window.open('index.html', '_self');
+    },
+
+    generateList: async function(prompt, color = "#50d3ff") {
+        try {
+            const items = await genTodoList(prompt);
+            const id = generateUniqueId(this.lists);
+            const newList = {
+                id,
+                title: prompt,
+                color,
+                items: items.map(name => ({
+                    id: generateUniqueId([]),
+                    name,
+                    checked: "false",
+                    subitems: []
+                }))
+            };
+            this.lists.push(newList);
+            save();
+            this.renderTodoBook();
+        } catch (err) {
+            console.error("AI list generation failed:", err);
+        }
+    },
+    
+    generateItems: async function(prompt, listId) {
+        try {
+            const items = await genTodoList(prompt);
+            const list = this.lists.find(l => l.id === listId);
+            if (!list) return;
+    
+            for (const name of items) {
+                list.items.push({
+                    id: generateUniqueId(list.items),
+                    name,
+                    checked: "false",
+                    subitems: []
+                });
+            }
+    
+            save();
+            this.renderTodoBook();
+        } catch (err) {
+            console.error("AI item generation failed:", err);
+        }
+    }
+};
+//#endregion
+
+//#region todo list
+const todoList = {
+    id: 0,
+    title: "",
+    color: "#ffffff",
+    items: [],
+
+    createItem: function(name, checked = false) {
+        const id = generateUniqueId(this.items);
+        this.items.push({
+            id,
+            name,
+            checked,
+            subitems: []
+        });
+    },
+
+    updateItem: function(id, name, checked) {
+        const item = this.items.find(i => i.id === id);
+        if (item) {
+            item.name = name;
+            item.checked = String(checked);
+            save();
+        }
+    },
+
+    deleteItem: function(id) {
+        this.items = this.items.filter(i => i.id !== id);
+        save();
+    },
+
+    moveCheckedItemsToStart: function() {
+        const sortRecursive = items => {
+            for (let item of items) {
+                if (item.subitems?.length) sortRecursive(item.subitems);
+            }
+            items.sort((a, b) => {
+                const aChecked = a.checked === "true";
+                const bChecked = b.checked === "true";
+                return (aChecked === bChecked) ? 0 : (aChecked ? -1 : 1);
+            });
+        };
+        sortRecursive(this.items);
+        save();
+    },
+    
+    moveCheckedItemsToEnd: function() {
+        const sortRecursive = items => {
+            for (let item of items) {
+                if (item.subitems?.length) sortRecursive(item.subitems);
+            }
+            items.sort((a, b) => {
+                const aChecked = a.checked === "true";
+                const bChecked = b.checked === "true";
+                return (aChecked === bChecked) ? 0 : (aChecked ? 1 : -1);
+            });
+        };
+        sortRecursive(this.items);
+        save();
+    },    
+
+    orderItemsAlphabeticaly: function() {
+        const sortRecursive = items => {
+            for (let item of items) {
+                if (item.subitems?.length) sortRecursive(item.subitems);
+            }
+            items.sort((a, b) => a.name.localeCompare(b.name));
+        };
+        sortRecursive(this.items);
+        save();
+    },
+
+    renderList: function() {
+        const container = document.getElementById("todoList");
+        if (!container) return;
+    
+        container.innerHTML = "";
+
+        if (!this.items || this.items.length === 0) {
+            container.innerHTML = `
+                <div class='placeholder-graphic'>
+                    <img src='resource/placeholder.png'>
+                    <h2 style="color: var(--highlight-color)">Still a blank canvas</h2>
+                    <p>Add your first task</p>
+                </div>
+            `;
+            return;
+        }
+    
+        const generateUniqueId = (items) => {
+            let id = 0;
+            while (items.some(item => item.id === id.toString())) {
+                id++;
+            }
+            return id.toString();
+        };
+    
+        const renderItem = (item, parentArray) => {
+            const itemDiv = document.createElement("div");
+            itemDiv.className = (parentArray !== this.items) ? "child-todo-item" : "todo-item";
+    
+            const mainContent = document.createElement("div");
+            mainContent.className = "main-content";
+    
+            const contentDiv = document.createElement("div");
+            contentDiv.className = "content-div";
+    
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = item.checked === "true";
+            checkbox.onchange = () => {
+                item.checked = String(checkbox.checked);
                 save();
-                renderTodoList();
+            };
+    
+            const label = document.createElement("label");
+            label.textContent = item.name;
+            label.setAttribute("translate", "no");
+    
+            contentDiv.appendChild(checkbox);
+            contentDiv.appendChild(label);
+    
+            const buttonDiv = document.createElement("div");
+            buttonDiv.className = "button-div";
+    
+            const addBtn = document.createElement("button");
+            addBtn.className = "icon-button add-subitem-button";
+            addBtn.textContent = "add";
+            addBtn.title = "Add Subitem";
+            addBtn.setAttribute("translate", "no");
+            addBtn.onclick = () => {
+                const name = prompt("Sub-item name");
+                if (name) {
+                    const newId = generateUniqueId(item.subitems);
+                    item.subitems.push({ id: newId, name, checked: "false", subitems: [] });
+                    save();
+                    this.renderList();
+                }
+            };
+    
+            const editBtn = document.createElement("button");
+            editBtn.className = "icon-button edit-button";
+            editBtn.textContent = "edit";
+            editBtn.title = "Edit";
+            editBtn.setAttribute("translate", "no");
+            editBtn.onclick = () => {
+                const name = prompt("Novo nome:", item.name);
+                if (name !== null) {
+                    item.name = name;
+                    save();
+                    this.renderList();
+                }
+            };
+    
+            const delBtn = document.createElement("button");
+            delBtn.className = "icon-button delete-button";
+            delBtn.textContent = "delete";
+            delBtn.title = "Delete";
+            delBtn.setAttribute("translate", "no");
+            delBtn.onclick = () => {
+                const index = parentArray.findIndex(i => i === item);
+                if (index !== -1) {
+                    parentArray.splice(index, 1);
+                    save();
+                    this.renderList();
+                }
+            };
+    
+            buttonDiv.appendChild(addBtn);
+            buttonDiv.appendChild(editBtn);
+            buttonDiv.appendChild(delBtn);
+    
+            mainContent.appendChild(contentDiv);
+            mainContent.appendChild(buttonDiv);
+    
+            itemDiv.appendChild(mainContent);
+    
+            const childContainer = document.createElement("div");
+            childContainer.className = "child-content";
+            item.subitems?.forEach(sub => {
+                const subItemDiv = renderItem(sub, item.subitems);
+                childContainer.appendChild(subItemDiv);
+            });
+    
+            itemDiv.appendChild(childContainer);
+
+            updateProgressBar();
+            return itemDiv;
+        };
+    
+        this.items.forEach(item => {
+            const element = renderItem(item, this.items);
+            container.appendChild(element);
+        });
+    },
+
+    getStat: function () {
+        let totalItems = 0;
+        let totalCheckedItems = 0;
+        let totalUncheckedItems = 0;
+    
+        let totalParentItems = 0;
+        let totalParentCheckedItems = 0;
+        let totalParentUncheckedItems = 0;
+    
+        let totalChildItems = 0;
+        let totalChildCheckedItems = 0;
+        let totalChildUncheckedItems = 0;
+    
+        const countStats = (items, isChild = false) => {
+            for (const item of items) {
+                totalItems++;
+                if (item.checked === "true") {
+                    totalCheckedItems++;
+                    if (isChild) {
+                        totalChildCheckedItems++;
+                    } else {
+                        totalParentCheckedItems++;
+                    }
+                } else {
+                    totalUncheckedItems++;
+                    if (isChild) {
+                        totalChildUncheckedItems++;
+                    } else {
+                        totalParentUncheckedItems++;
+                    }
+                }
+    
+                if (isChild) {
+                    totalChildItems++;
+                } else {
+                    totalParentItems++;
+                }
+    
+                if (item.subitems && item.subitems.length > 0) {
+                    countStats(item.subitems, true);
+                }
             }
         };
-        buttonDiv.appendChild(editBtn);
-
-        const menu = createItemMenu(item, isSubitem, parentIndex, itemId);
-        buttonDiv.appendChild(menu);
-
-        content.appendChild(checkbox);
-        content.appendChild(label);
-        content.appendChild(buttonDiv);
-        wrapper.appendChild(content);
-
-        if (item.childItems && item.childItems.length > 0 && !isSubitem) {
-            const subContainer = document.createElement("div");
-            subContainer.className = "subitem-container";
-
-            item.childItems.forEach((subItem) => {
-                const subElement = createItemElement(subItem, true, todoList.indexOf(item));
-                subContainer.appendChild(subElement);
-            });
-
-            wrapper.appendChild(subContainer);
-        }
-
-        return wrapper;
+    
+        countStats(this.items);
+    
+        return {
+            totalItems,
+            totalCheckedItems,
+            totalUncheckedItems,
+            totalParentItems,
+            totalParentCheckedItems,
+            totalParentUncheckedItems,
+            totalChildItems,
+            totalChildCheckedItems,
+            totalChildUncheckedItems
+        };
     }
+};
+//#endregion
 
-    todoList.forEach(item => {
-        const element = createItemElement(item);
-        listContainer.appendChild(element);
-    });
+//#region todo item
+const todoItem = {
+    id: 0,
+    name: "",
+    checked: false,
+    subitems: [],
 
+    createItem: function(name, checked = false) {
+        return {
+            id: String(this.subitems.length),
+            name,
+            checked: String(checked),
+            subitems: []
+        };
+    },
+
+    updateItem: function(id, name, checked) {
+        const item = this.subitems.find(i => i.id === id);
+        if (item) {
+            item.name = name;
+            item.checked = String(checked);
+        }
+    },
+
+    deleteItem: function(id) {
+        this.subitems = this.subitems.filter(i => i.id !== id);
+    }
+};
+//#endregion
+
+//#region file management
+function save() {
+    localStorage.setItem("kittenTodoBookJson", JSON.stringify({ KittenTodoBook: { lists: todoBook.lists } }));
+    console.log(JSON.stringify({ KittenTodoBook: { lists: todoBook.lists } }));
     updateProgressBar();
 }
 
-function createItemMenu(item, isSubitem, parentIndex, itemId) {
-    const dropdown = document.createElement("div");
-    dropdown.className = "dropdown";
-
-    const menuButton = document.createElement("button");
-    menuButton.className = "icon-button dropdown-btn";
-    menuButton.setAttribute("translate", "no");
-    menuButton.textContent = "more_horiz";
-
-    const menuId = `${itemId}-menu`;
-    menuButton.setAttribute("onclick", `toggleDropdown('${menuId}')`);
-
-    const menu = document.createElement("div");
-    menu.className = "dropdown-content menu";
-    menu.id = menuId;
-
-    const tagBtn = document.createElement("button");
-    tagBtn.className = "text-button";
-    tagBtn.innerHTML = `<span class="icon" translate="no">sell</span>Tag`;
-    tagBtn.onclick = async () => {
-        let newTag = promptSelect("Select a tag", ["tag1", "tag2", "tag3"]);
-    }
-
-    const descBtn = document.createElement("button");
-    descBtn.className = "text-button";
-    descBtn.innerHTML = `<span class="icon" translate="no">description</span>Description`;
-
-    const genBtn = document.createElement("button");
-    genBtn.className = "text-button";
-    genBtn.innerHTML = `<span class="icon" translate="no">prompt_suggestion</span>Generate list`;
-    genBtn.onclick = async () => {
+function load() {
+    const json = localStorage.getItem("kittenTodoBookJson");
+    if (json) {
         try {
-            const generated = await genTodoList(item.name);
-            if (Array.isArray(generated)) {
-                generated.forEach(task => {
-                    item.childItems.push({
-                        name: task,
-                        description: "",
-                        completed: false,
-                        childItems: [],
-                        tags: [],
-                    });
-                });
-                save();
-                renderTodoList();
-            } else {
-                alert("Could not generate a valid list");
-                console.warn("Invalid list format:", generated);
-            }
-        } catch (err) {
-            alert(`Error generating list: ${err.message}`);
-            console.error("Gen error:", err);
+            const data = JSON.parse(json);
+            todoBook.lists = data.KittenTodoBook?.lists || [];
+        } catch (e) {
+            console.error("Failed to load file");
         }
-    };
-
-    const deleteBtn = document.createElement("button");
-    deleteBtn.className = "text-button";
-    deleteBtn.innerHTML = `<span class="icon" translate="no">delete</span>Delete`;
-    deleteBtn.onclick = () => {
-        if (isSubitem) {
-            const parentItem = todoList[parentIndex];
-            parentItem.childItems = parentItem.childItems.filter(child => child !== item);
-        } else {
-            todoList = todoList.filter(i => i !== item);
-        }
-        save();
-        renderTodoList();
-    };
-
-    if (!isSubitem) {
-        menu.appendChild(descBtn);
-        menu.appendChild(tagBtn);
-        menu.appendChild(genBtn);
-        menu.appendChild(document.createElement("hr"));
     }
-    menu.appendChild(deleteBtn);
-    dropdown.appendChild(menuButton);
-    dropdown.appendChild(menu);
+    updateProgressBar();
+}
+//#endregion
 
-    return dropdown;
+//#region support functions
+
+function generateUniqueId(items) {
+    let id = 0;
+    while (items.some(item => item.id === id.toString())) {
+        id++;
+    }
+    return id.toString();
+}
+
+function handleSearch() {
+    const query = document.getElementById("search-input").value.trim().toLowerCase();
+
+    const results = query === ""
+        ? todoBook.lists
+        : todoBook.lists.filter(list => list.title.toLowerCase().includes(query));
+
+    todoBook.renderTodoBook(results);
 }
 
 function updateProgressBar() {
     const pb = document.getElementById('progress-bar');
-    const counts = getTodoCounts();
+    const counts = todoList.getStat();
     const done = counts.totalParentCheckedItems;
     const total = counts.totalParentItems;
 
@@ -434,150 +627,6 @@ function updateProgressBar() {
     } else if (pb) {
         pb.style.width = `0%`;
         pb.title = `0%`;
-    }
-}
-
-function updateWindowTitle(title){
-    if(title != ""){
-        document.title = `${title} - Kitten`;
-    } else {
-        document.title = "Kitten";
-    }
-}
-//#endregion
-
-//#region STATISTICS
-function getTodoCounts() {
-    let totalItems = 0;
-    let totalCheckedItems = 0;
-    let totalUncheckedItems = 0;
-
-    let totalParentItems = todoList.length;
-    let totalParentCheckedItems = 0;
-    let totalParentUncheckedItems = 0;
-
-    let totalChildItems = 0;
-    let totalChildCheckedItems = 0;
-    let totalChildUncheckedItems = 0;
-
-    for (const item of todoList) {
-        totalItems++;
-        if (item.completed) {
-            totalCheckedItems++;
-            totalParentCheckedItems++;
-        } else {
-            totalUncheckedItems++;
-            totalParentUncheckedItems++;
-        }
-
-        for (const child of item.childItems) {
-            totalItems++;
-            totalChildItems++;
-            if (child.completed) {
-                totalCheckedItems++;
-                totalChildCheckedItems++;
-            } else {
-                totalUncheckedItems++;
-                totalChildUncheckedItems++;
-            }
-        }
-    }
-
-    return {
-        totalItems,
-        totalCheckedItems,
-        totalUncheckedItems,
-        totalParentItems,
-        totalParentCheckedItems,
-        totalParentUncheckedItems,
-        totalChildItems,
-        totalChildCheckedItems,
-        totalChildUncheckedItems
-    };
-}
-//#endregion
-
-//#region LIST EDIT
-function orderByAlpha() {
-    function sortItems(items) {
-        items.sort((a, b) => a.name.localeCompare(b.name));
-        items.forEach(item => {
-            if (item.childItems && item.childItems.length > 0) {
-                sortItems(item.childItems);
-            }
-        });
-    }
-
-    sortItems(todoList);
-    save(true);
-}
-
-function groupChecked() {
-    function sortByChecked(items) {
-        items.sort((a, b) => {
-            if (a.completed === b.completed) return 0;
-            return a.completed ? -1 : 1;
-        });
-        items.forEach(item => {
-            if (item.childItems && item.childItems.length > 0) {
-                sortByChecked(item.childItems);
-            }
-        });
-    }
-
-    sortByChecked(todoList);
-    save();
-    renderTodoList();
-}
-
-function groupUnchecked() {
-    function sortByUnchecked(items) {
-        items.sort((a, b) => {
-            if (a.completed === b.completed) return 0;
-            return a.completed ? 1 : -1;
-        });
-        items.forEach(item => {
-            if (item.childItems && item.childItems.length > 0) {
-                sortByUnchecked(item.childItems);
-            }
-        });
-    }
-
-    sortByUnchecked(todoList);
-    save();
-    renderTodoList();
-}
-
-function deleteHighest() {
-    const first = document.querySelector("#list > .todo-item");
-    if (!first) return;
-
-    const label = first.querySelector("label");
-    if (!label) return;
-
-    const name = label.textContent.trim();
-    deleteTodoItem(name);
-    save(true);
-}
-
-function deleteLowest() {
-    const all = document.querySelectorAll("#list > .todo-item");
-    if (all.length === 0) return;
-
-    const last = all[all.length - 1];
-    const label = last.querySelector("label");
-    if (!label) return;
-
-    const name = label.textContent.trim();
-    deleteTodoItem(name);
-    save(true);
-}
-
-function deleteAll() {
-    const confirmDelete = confirm("Are you sure you want to delete all items? This action cannot be undone.");
-    if (confirmDelete) {
-        todoList = [];
-        save(true);
     }
 }
 //#endregion

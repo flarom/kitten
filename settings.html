@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings</title>
-    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/share.css">
     <link rel="stylesheet" href="style/palette.css">
+    <link rel="stylesheet" href="style/settings.css">
     <link rel="stylesheet" href="style/containers.css">
     <link rel="stylesheet" href="style/inputs.css">
     <link rel="shortcut icon" href="resource/favicon.png" type="image/x-icon">
@@ -14,7 +15,7 @@
 
 <body>
     <div class="document">
-        <a href="index.html"><span class="icon" translate="no">arrow_back</span> Go back</a>
+        <a class="decorated" href="index.html"><span class="icon" translate="no">arrow_back</span> Go back</a>
         <h1>Settings</h1>
         <h2>Look and feel</h2>
         <!-- #region look and feel -->
@@ -118,9 +119,9 @@
         <h2>Data</h2>
         <!-- #region data -->
         <details name="setting">
-            <summary><span class="center-flex"><span class="large-icon" translate="no">checklist</span>Manage task list</span>
+            <summary><span class="center-flex"><span class="large-icon" translate="no">checklist</span>Manage task book</span>
             </summary>
-            <button class="danger-button" data-action="clearListData()" title="Clear todo list [hold]">Clear</button>
+            <button class="danger-button" data-action="todoBook.deleteBook()" title="Clear todo list [hold]">Clear</button>
         </details>
 
         <details name="setting">
@@ -141,7 +142,7 @@
             <input type="text" name="gpt-model" id="gpt-model" placeholder="Example: gpt-4.1-nano"><br> -->
 
             <button class="danger-button" data-action="localStorage.removeItem('kittenGptKey'); location.reload();" title="Clear my API data [hold]">Clear</button>
-            <a href="https://platform.openai.com/" target="_blank">OpenAI Plataform</a>
+            <a class="decorated" href="https://platform.openai.com/" target="_blank">OpenAI Plataform</a>
         </details>
 
         <hr>
@@ -170,9 +171,9 @@
                     <h3>Kitten 🐾</h3>
                     <p>Kitten is an <b>accountless</b>, <b>free</b> and <b>opensource</b> tasklist manager.</p>
                     <ul>
-                        <li><a href="https://github.com/flarom/kitten/blob/main/README.md">Documentation</a></li>
-                        <li><a href="https://github.com/flarom/kitten/">GitHub Repository</a></li>
-                        <li><a href="getkitten.html">Landing Page</a></li>
+                        <li><a class="decorated" href="https://github.com/flarom/kitten/blob/main/README.md">Documentation</a></li>
+                        <li><a class="decorated" href="https://github.com/flarom/kitten/">GitHub Repository</a></li>
+                        <li><a class="decorated" href="getkitten.html">Landing Page</a></li>
                     </ul>
                 </div>
             </div>

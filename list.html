@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitten</title>
+    <link rel="stylesheet" href="style/palette.css">
+    <link rel="stylesheet" href="style/todolist.css">
+    <link rel="stylesheet" href="style/prompts.css">
+    <link rel="stylesheet" href="style/containers.css">
+    <link rel="stylesheet" href="style/share.css">
+    <link rel="shortcut icon" href="resource/favicon.png" type="image/x-icon">
+</head>
+
+<body>
+    <div class="workspace">
+        <div class="progress-wrapper">
+            <div class="progress-bar" id="progress-bar" style="width: 0%;" title="0.00%"></div>
+        </div>
+        <div class="header-bar">
+            <button class="icon-button" onclick="window.open('index.html', '_self')">arrow_back</button>
+            <input type="text" id="list-title-input" placeholder="Tasklist title" class="title-box" oninput="updateTitle()">
+            <div class="dropdown">
+                <button class="icon-button dropdown-btn" onclick="toggleDropdown('file-menu')" translate="no">more_vert</button>
+                <div class="dropdown-content menu" id="file-menu">
+                    <button class="text-button" onclick="download()"><span class="icon" translate="no">save</span>Save file <kbd>Ctrl+S</kbd></button>
+                    <hr>
+                    <button class="text-button" onclick="showShortcuts()"><span class="icon" translate="no">keyboard_keys</span>Keyboard shortcuts <kbd>/</kbd></button>
+                </div>
+            </div>
+        </div>
+        <div id="todoList" class="todo-list">
+            
+        </div>
+        <div class="button-bar">
+            <button onclick="orderItemsAlphabeticaly()" class="icon-button">abc</button>
+            <button onclick="moveCheckedItemsToStart()" class="icon-button">keyboard_arrow_up</button>
+            <button onclick="moveCheckedItemsToEnd()" class="icon-button">keyboard_arrow_down</button>
+            <button onclick="createItem()" class="icon-button create-button">add</button>
+        </div>
+    </div>
+    <script src="script/todo.js"></script>
+    <script src="script/settings.js"></script>
+    <script src="script/menus.js"></script>
+    <script>
+        window.onload = () => {
+            load();
+
+            const params = new URLSearchParams(window.location.search);
+            const listId = params.get("list");
+            if (!listId) return;
+            
+            const list = todoBook.lists.find(l => l.id === listId);
+            if (!list) return;
+            todoList.id = list.id;
+            todoList.title = list.title;
+            todoList.color = list.color;
+            todoList.items = list.items;
+            
+            todoList.renderList();
+            
+            const titlebox = document.getElementById('list-title-input');
+            document.title = `${todoList.title}`;
+            titlebox.value = todoList.title;
+        };
+
+        async function createItem() {
+            const name = await promptString("New item:");
+            if (!name) return;
+
+            todoList.createItem(name);
+            save();
+            todoList.renderList();
+        }
+
+        function orderItemsAlphabeticaly(){
+            todoList.orderItemsAlphabeticaly();
+            save();
+            todoList.renderList();
+        }
+
+        function moveCheckedItemsToStart(){
+            todoList.moveCheckedItemsToStart();
+            save();
+            todoList.renderList();
+        }
+
+        function moveCheckedItemsToEnd(){
+            todoList.moveCheckedItemsToEnd();
+            save();
+            todoList.renderList();
+        }
+
+        function updateTitle() {
+            const titlebox = document.getElementById('list-title-input');
+            todoList.title = titlebox.value;
+                
+            const listIndex = todoBook.lists.findIndex(l => l.id === todoList.id);
+            if (listIndex !== -1) {
+                todoBook.lists[listIndex].title = titlebox.value;
+            }
+        
+            document.title = `${todoList.title}`;
+            save();
+        }
+
+        window.addEventListener("storage", (event) => {
+            if (event.key === "kittenTodoBookJson") {
+                location.reload();
+            }
+        });
+    </script>
+</body>
+
+</html>

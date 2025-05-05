@@ -1,33 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kitten</title>
-    <link rel="stylesheet" href="style/style.css">
     <link rel="stylesheet" href="style/palette.css">
-    <link rel="stylesheet" href="style/containers.css">
+    <link rel="stylesheet" href="style/todobook.css">
     <link rel="stylesheet" href="style/prompts.css">
+    <link rel="stylesheet" href="style/containers.css">
+    <link rel="stylesheet" href="style/share.css">
     <link rel="shortcut icon" href="resource/favicon.png" type="image/x-icon">
 </head>
-
 <body>
-    <div class="main">     
+    <div class="workspace tab-zone">
         <div class="progress-wrapper">
-            <div class="progress-bar" id="progress-bar"></div>
+            <div class="progress-bar" id="progress-bar" style="width: 0%;" title="0.00%"></div>
         </div>
-        <div class="title-bar">
-            <input type="text" id="list-title" placeholder="Tasklist title" class="title-box" oninput="save()">
+        <div class="header-bar">
+            <input type="text" id="search-input" oninput="handleSearch()" placeholder="Search">
             <div class="dropdown">
                 <button class="icon-button dropdown-btn" onclick="toggleDropdown('file-menu')" translate="no">more_vert</button>
                 <div class="dropdown-content menu" id="file-menu">
-                    <button class="text-button" onclick="exportJson()"><span class="icon" translate="no">save</span>Save file <kbd>Ctrl+S</kbd></button>
-                    <button class="text-button" onclick="importJson()"><span class="icon" translate="no">folder_open</span>Open file <kbd>Ctrl+O</kbd></button>
+                    <button class="text-button" onclick="download()"><span class="icon" translate="no">save</span>Save file <kbd>Ctrl+S</kbd></button>
+                    <button class="text-button" onclick="todoBook.importBook()"><span class="icon" translate="no">folder_open</span>Open file <kbd>Ctrl+O</kbd></button>
                     <hr>
-                    <button class="text-button" onclick="exportMd()"><span class="icon" translate="no">markdown</span>Export Markdown</button>
-                    <hr>
-                    <button class="text-button" onclick="showTagsManager()"><span class="icon" translate="no">sell</span>Manage tags <kbd>Alt+T</kbd></button>
+                    <button class="text-button" onclick="downloadMarkdown()"><span class="icon" translate="no">markdown</span>Export Markdown</button>
                     <hr>
                     <button class="text-button" onclick="window.open('settings.html', '_self').focus();"><span class="icon" translate="no">settings</span>Settings</button>
                     <button class="text-button" onclick="showShortcuts()"><span class="icon" translate="no">keyboard_keys</span>Keyboard shortcuts <kbd>/</kbd></button>
@@ -35,32 +32,152 @@
                 </div>
             </div>
         </div>
-        <div id="list" class="todo-list"></div>
+        <div id="todoBook" class="todo-book">
+
+        </div>
         <div class="button-bar">
-            <button onclick="orderByAlpha()" class="icon-button sort-button" title="Sort items alphabetically (Ctrl+I)" translate="no">abc</button>
-            <button onclick="groupChecked()" class="icon-button" title="Move checked items to the top (Ctrl+U)" translate="no">keyboard_arrow_up</button>
-            <button onclick="groupUnchecked()" class="icon-button" title="Move checked items to the bottom (Ctrl+Y)" translate="no">keyboard_arrow_down</button>
-            <button onclick="createTodoItem()" class="icon-button create-button" title="Create new item (Ctrl+K)" translate="no">add</button>
+            <button onclick="createList()" class="icon-button create-button" translate="no" title="Create new list (Ctrl+K | Alt+K)">add</button>
         </div>
     </div>
 
+    <script src="script/misc.js"></script>
     <script src="script/todo.js"></script>
-    <script src="script/shortcuts.js"></script>
     <script src="script/settings.js"></script>
     <script src="script/menus.js"></script>
     <script>
-        load();
-        renderTodoList();
+        async function createList() {
+            const result = await promptListCreation();
+            if (!result) return;
 
-        function showTagsManager() {
-            promptTagsEditor(tags, icons).then(result => {
-                if (result !== null) {
-                    tags = result;
-                    save(true);
+            if (result.mode === "manual") {
+                todoBook.createList(result.title, result.color, true);
+            } else if (result.mode === "ai") {
+                await todoBook.generateList(result.prompt, result.color);
+            }
+        }
+
+        async function download() {
+            const today = new Date().toISOString().split("T")[0];
+            const filename = await promptString("Compact Agenda Tree file name:", today);
+            if (filename) {
+                todoBook.exportBook(filename);
+            }
+        }
+
+        async function downloadMarkdown() {
+            const today = new Date().toISOString().split("T")[0];
+            const filename = await promptString("Markdown Document file name:", today);
+            if (filename) {
+                todoBook.exportMdBook(filename);
+            }
+        }
+
+        function updateTitle(){
+            const counts = todoBook.getStat();
+            const count = counts.listCount;
+            const fileSize = counts.estimatedSize;
+
+            document.title = `Kitten - ${count} lists (${fileSize})`;
+        }
+
+        window.addEventListener("storage", (event) => {
+            if (event.key === "kittenTodoBookJson") {
+                location.reload();
+            }
+        });
+
+        load();
+        todoBook.renderTodoBook();
+        updateTitle();
+
+        const workspace = document.querySelector(".workspace");
+
+        workspace.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            workspace.classList.add("dragging");
+        });
+
+        workspace.addEventListener("dragleave", () => {
+            workspace.classList.remove("dragging");
+        });
+
+        workspace.addEventListener("drop", (e) => {
+            e.preventDefault();
+            workspace.classList.remove("dragging");
+        
+            const file = e.dataTransfer.files[0];
+            if (!file || !/\.(cat|json)$/i.test(file.name)) {
+                alert(`"${file.name}" is not a valid file (use .CAT or .JSON)`)
+                return;
+            };
+        
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    const json = JSON.parse(reader.result);
+                    const newLists = json.KittenTodoBook?.lists;
+                    if (!Array.isArray(newLists)) return;
+                
+                    const existingIds = todoBook.lists.map(list => list.id);
+                    newLists.forEach(list => {
+                        list.id = generateUniqueId(todoBook.lists);
+                        todoBook.lists.push(list);
+                    });
+                
+                    save();
+                    todoBook.renderTodoBook();
+                    updateTitle();
+                } catch (err) {
+                    console.error("Invalid .cat file!", err);
                 }
-            });
+            };
+            reader.readAsText(file);
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.ctrlKey && event.key === "k") { // Ctrl + K - add new item
+                event.preventDefault();
+                createList();
+            }
+            else if (event.altKey && event.key === "k") { // Alt + K - add new unamed item
+                event.preventDefault();
+                todoBook.createList("New Item", randomHighlightColor(getCSSVariableValue("--highlight-color") || "#50d3ff"), false);
+                load();
+                todoBook.renderTodoBook();
+                updateTitle();
+            }
+            else if (event.key === "F2") { // F2 - search
+                const listTitle = document.getElementById("search-input");
+                listTitle.focus();
+            }
+            else if (event.ctrlKey && event.key === "s") { // Ctrl + S - save
+                event.preventDefault();
+                download();
+            }
+            else if (event.ctrlKey && event.key === "o") { // Ctrl + O - open
+                event.preventDefault();
+                todoBook.importBook();
+            }
+            else if (event.key === "/") { // / - shortcuts
+                event.preventDefault();
+                showShortcuts();
+            }
+        });
+
+        async function showShortcuts(){
+            promptMessage(`
+            <h2 style='display:flex;align-items:center;gap:10px'><span class="large-icon">keyboard_keys</span>Keyboard Shortcuts</h2>
+            <table>
+                <tr><th>Shortcut</th>                           <th>Action</th></tr>
+                <tr><td><kbd>Ctrl</kbd>+<kbd>S</kbd></td>       <td>Save file as .cat</td></tr>
+                <tr><td><kbd>Ctrl</kbd>+<kbd>O</kbd></td>       <td>Open .cat document</td></tr>
+                <tr><td><kbd>Ctrl</kbd>+<kbd>K</kbd></td>       <td>Add new item</td></tr>
+                <tr><td><kbd>Alt</kbd>+<kbd>K</kbd></td>        <td>Add new item without name prompt</td></tr>
+                <tr><td><kbd>/</kbd></td>                       <td>Show shortcuts</td></tr>
+                <tr><td><kbd>F2</kbd></td>                      <td>Search</td></tr>
+            </table>
+            `);
         }
     </script>
 </body>
-
 </html>

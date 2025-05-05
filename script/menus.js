@@ -79,6 +79,8 @@ function promptString(title, defaultText="") {
         document.body.appendChild(overlay);
 
         input.focus();
+        input.selectionStart = 0;
+        input.selectionEnd = input.value.length;
 
         function closePrompt(result) {
             document.body.removeChild(overlay);
@@ -95,77 +97,6 @@ function promptString(title, defaultText="") {
                 closePrompt(null);
             }
         });
-    });
-}
-
-function promptSelect(title, options = [], defaultOption = "") {
-    return new Promise((resolve) => {
-        // overlay
-        const overlay = document.createElement('div');
-        overlay.className = 'prompt-overlay';
-
-        // dialog
-        const dialog = document.createElement('div');
-        dialog.className = 'prompt-dialog';
-
-        // title
-        const titleElement = document.createElement('p');
-        titleElement.textContent = title;
-        titleElement.className = 'prompt-title';
-        dialog.appendChild(titleElement);
-
-        // combo-box
-        const select = document.createElement('select');
-        select.className = 'prompt-select';
-
-        options.forEach((opt) => {
-            const optionElement = document.createElement('option');
-            optionElement.value = opt;
-            optionElement.textContent = opt;
-            if (opt === defaultOption) {
-                optionElement.selected = true;
-            }
-            select.appendChild(optionElement);
-        });
-
-        dialog.appendChild(select);
-
-        // buttons
-        const buttonContainer = document.createElement('div');
-        buttonContainer.className = 'prompt-buttons';
-
-        const cancelButton = document.createElement('button');
-        cancelButton.textContent = 'Cancel';
-        cancelButton.className = 'prompt-button cancel';
-
-        const submitButton = document.createElement('button');
-        submitButton.textContent = 'Submit';
-        submitButton.className = 'prompt-button submit';
-
-        buttonContainer.appendChild(cancelButton);
-        buttonContainer.appendChild(submitButton);
-        dialog.appendChild(buttonContainer);
-
-        overlay.appendChild(dialog);
-        document.body.appendChild(overlay);
-
-        function closePrompt(result) {
-            document.body.removeChild(overlay);
-            resolve(result);
-        }
-
-        cancelButton.addEventListener('click', () => closePrompt(null));
-        submitButton.addEventListener('click', () => closePrompt(select.value));
-
-        overlay.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                closePrompt(select.value);
-            } else if (event.key === 'Escape') {
-                closePrompt(null);
-            }
-        });
-
-        select.focus();
     });
 }
 
@@ -213,155 +144,169 @@ function promptMessage(htmlContent) {
     });
 }
 
-function promptTagsEditor(tags = [], iconOptions = []) {
+//#region list creating
+
+function promptListCreation() {
     return new Promise((resolve) => {
         const overlay = document.createElement('div');
         overlay.className = 'prompt-overlay';
 
         const dialog = document.createElement('div');
+        dialog.style.width = '500px';
         dialog.className = 'prompt-dialog';
 
-        const tagList = document.createElement('div');
-        tagList.className = 'prompt-list';
-        dialog.appendChild(tagList);
+        // Title
+        const titleElement = document.createElement('p');
+        titleElement.textContent = "Create a new list";
+        titleElement.className = 'prompt-title';
+        dialog.appendChild(titleElement);
 
-        function renderTags() {
-            tagList.innerHTML = '';
-            tags.forEach((tag, index) => {
-                const tagItem = document.createElement('div');
-                tagItem.style.display = 'flex';
-                tagItem.style.justifyContent = 'space-between';
-                tagItem.style.alignItems = 'center';
-                tagItem.style.background = 'var(--field-color)';
-                tagItem.style.padding = '5px 10px';
-                tagItem.style.borderRadius = '10px';
-
-                const icon = document.createElement('span');
-                icon.textContent = `${tag.icon}`;
-                icon.style.fontFamily = 'Material Symbols Outlined';
-
-                const text = document.createElement('span');
-                text.textContent = `${tag.name}`;
-
-                const remove = document.createElement('button');
-                remove.textContent = '✖';
-                remove.style.background = 'transparent';
-                remove.style.border = 'none';
-                remove.style.color = 'var(--text-color)';
-                remove.style.cursor = 'pointer';
-
-                remove.addEventListener('click', () => {
-                    tags.splice(index, 1);
-                    renderTags();
-                });
-
-                tagItem.appendChild(icon);
-                tagItem.appendChild(text);
-                tagItem.appendChild(remove);
-                tagList.appendChild(tagItem);
-            });
-        }
-
-        renderTags();
-
-        const inputContainer = document.createElement('div');
-        inputContainer.style.display = 'flex';
-        inputContainer.style.gap = '0.5rem';
-        inputContainer.style.alignItems = 'center';
-        inputContainer.style.paddingBottom = '30px';
-
-        const iconSelect = document.createElement('select');
-        iconSelect.className = 'prompt-select';
-        iconSelect.style.fontFamily = 'Material Symbols Outlined';
-        iconSelect.style.fontSize = 'large';
-        iconSelect.style.width = '4rem';
-        iconSelect.style.minWidth = 'unset';
-        iconSelect.style.flexShrink = '0';
-        iconSelect.style.textAlign = 'center';
-
+        const fieldsContainer = document.createElement('div');
+        fieldsContainer.className = "center-flex";
+        fieldsContainer.style.marginBottom = "20px";
+        
+        // Color field
+        const colorInput = document.createElement('input');
+        colorInput.type = 'color';
+        colorInput.value = getCSSVariableValue("--highlight-color") || "#50d3ff";
+        fieldsContainer.appendChild(colorInput);
+        
+        // Name field
         const nameInput = document.createElement('input');
-        nameInput.placeholder = 'Tag name';
+        nameInput.type = 'text';
+        nameInput.placeholder = 'List title';
         nameInput.className = 'prompt-input';
-        nameInput.style.flex = '1';
+        nameInput.style.width = 'calc(100% - 100px)';
+        nameInput.style.margin = '0px';
+        fieldsContainer.appendChild(nameInput);
+        dialog.appendChild(fieldsContainer)
 
-        iconOptions.forEach(icon => {
-            const opt = document.createElement('option');
-            opt.value = icon;
-            opt.textContent = icon;
-            iconSelect.appendChild(opt);
-        });
-
-        const addButton = document.createElement('button');
-        addButton.textContent = 'add';
-        addButton.className = 'prompt-button';
-        addButton.style.fontFamily = 'Material Symbols Outlined';
-        addButton.style.fontSize = 'large';
-        addButton.style.flexShrink = '0';
-        addButton.style.height = '30px';
-        addButton.style.paddingLeft = '10px';
-        addButton.style.paddingRight = '10px';
-
-        addButton.addEventListener('click', () => {
-            const name = nameInput.value.trim();
-            const icon = iconSelect.value;
-            if (name) {
-                tags.push({ name, icon });
-                nameInput.value = '';
-                iconSelect.selectedIndex = 0;
-                renderTags();
-            }
-        });
-
+        // Buttons
         const buttonContainer = document.createElement('div');
-        buttonContainer.style.display = 'flex';
-        buttonContainer.style.gap = '10px';
+        buttonContainer.className = 'prompt-buttons';
 
-        const cancelButton = document.createElement('button');
-        cancelButton.textContent = 'Cancel';
-        cancelButton.className = 'prompt-button';
+        const cancelBtn = document.createElement('button');
+        cancelBtn.textContent = "Cancel";
+        cancelBtn.className = "prompt-button cancel";
 
-        const submitButton = document.createElement('button');
-        submitButton.textContent = 'Save';
-        submitButton.className = 'prompt-button submit';
+        const createBtn = document.createElement('button');
+        createBtn.textContent = "Create";
+        createBtn.className = "prompt-button submit";
 
-        inputContainer.appendChild(iconSelect);
-        inputContainer.appendChild(nameInput);
-        inputContainer.appendChild(addButton);
+        const aiBtn = document.createElement('button');
+        aiBtn.textContent = "Generate";
+        aiBtn.className = "prompt-button";
 
-        buttonContainer.appendChild(cancelButton);
-        buttonContainer.appendChild(submitButton);
-
-        dialog.appendChild(inputContainer);
+        buttonContainer.appendChild(createBtn);
+        buttonContainer.appendChild(aiBtn);
+        buttonContainer.appendChild(cancelBtn);
         dialog.appendChild(buttonContainer);
+
         overlay.appendChild(dialog);
         document.body.appendChild(overlay);
 
-        function closePrompt(result) {
+        nameInput.focus();
+
+        function close(result) {
             document.body.removeChild(overlay);
             resolve(result);
         }
 
-        cancelButton.addEventListener('click', () => closePrompt(null));
-        submitButton.addEventListener('click', () => {
-            const name = nameInput.value.trim();
-            const icon = iconSelect.value;
-        
-            if (name) {
-                tags.push({ name, icon });
-                nameInput.value = '';
-                iconSelect.selectedIndex = 0;
-            }
-        
-            renderTags();
-            closePrompt(tags);
-        });
+        cancelBtn.onclick = () => close(null);
 
-        overlay.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                closePrompt(null);
-            }
-        });
+        createBtn.onclick = () => {
+            if (!nameInput.value.trim()) return;
+            close({ mode: "manual", title: nameInput.value.trim(), color: colorInput.value });
+        };
 
-        nameInput.focus();
+        aiBtn.onclick = () => {
+            if (!nameInput.value.trim()) return;
+            close({ mode: "ai", prompt: nameInput.value.trim(), color: colorInput.value });
+        };
+
+        overlay.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") createBtn.click();
+            else if (e.key === "Escape") cancelBtn.click();
+        });
     });
 }
+
+function promptListUpdate(title = "", color = "#50d3ff") {
+    return new Promise((resolve) => {
+        const overlay = document.createElement('div');
+        overlay.className = 'prompt-overlay';
+
+        const dialog = document.createElement('div');
+        dialog.style.width = '500px';
+        dialog.className = 'prompt-dialog';
+
+        // Title
+        const titleElement = document.createElement('p');
+        titleElement.textContent = "Edit list";
+        titleElement.className = 'prompt-title';
+        dialog.appendChild(titleElement);
+
+        const fieldsContainer = document.createElement('div');
+        fieldsContainer.className = "center-flex";
+        fieldsContainer.style.marginBottom = "20px";
+
+        // Color input
+        const colorInput = document.createElement('input');
+        colorInput.type = 'color';
+        colorInput.value = color || "#50d3ff";
+        fieldsContainer.appendChild(colorInput);
+
+        // Name input
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.placeholder = 'List title';
+        nameInput.value = title || "";
+        nameInput.className = 'prompt-input';
+        nameInput.style.width = 'calc(100% - 100px)';
+        nameInput.style.margin = '0px';
+        fieldsContainer.appendChild(nameInput);
+        dialog.appendChild(fieldsContainer);
+
+        // Buttons
+        const buttonContainer = document.createElement('div');
+        buttonContainer.className = 'prompt-buttons';
+
+        const cancelBtn = document.createElement('button');
+        cancelBtn.textContent = "Cancel";
+        cancelBtn.className = "prompt-button cancel";
+
+        const saveBtn = document.createElement('button');
+        saveBtn.textContent = "Save";
+        saveBtn.className = "prompt-button submit";
+
+        buttonContainer.appendChild(saveBtn);
+        buttonContainer.appendChild(cancelBtn);
+        dialog.appendChild(buttonContainer);
+
+        overlay.appendChild(dialog);
+        document.body.appendChild(overlay);
+
+        nameInput.focus();
+        nameInput.selectionStart = 0;
+        nameInput.selectionEnd = nameInput.value.length;
+
+        function close(result) {
+            document.body.removeChild(overlay);
+            resolve(result);
+        }
+
+        cancelBtn.onclick = () => close(null);
+
+        saveBtn.onclick = () => {
+            if (!nameInput.value.trim()) return;
+            close({ title: nameInput.value.trim(), color: colorInput.value });
+        };
+
+        overlay.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") saveBtn.click();
+            else if (e.key === "Escape") cancelBtn.click();
+        });
+    });
+}
+
+//#endregion

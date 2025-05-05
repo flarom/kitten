@@ -97,3 +97,10 @@ function clearSettings() {
 
     location.reload();
 }
+
+function getCSSVariableValue(name) {
+    let value = localStorage.getItem(name);
+    if (value) return value;
+
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}

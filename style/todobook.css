@@ -1,0 +1,66 @@
+.todo-book {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: scroll;
+    max-height: 100vh;
+    min-height: 200px;
+}
+
+.todo-book-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-left: 2px solid transparent;
+    cursor: pointer;
+    border-radius: 0px 10px 10px 0px;
+    transition: background-color 0.3s, border-radius 0.3s, border-left 0.3s;
+}
+
+.todo-book-item:last-child {
+    margin-bottom: 50vh;
+}
+
+.todo-book-item .title-div {
+    width: 75%;
+}
+
+.todo-book-item .title-div h3 {
+    flex-shrink: 0;
+    max-width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 10px 0px 10px 0px
+}
+
+.todo-book-item-buttons {
+    opacity: 0%;
+    transition: opacity 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 1px;
+}
+
+.todo-book-item:hover .todo-book-item-buttons {
+    opacity: 100%;
+}
+
+.todo-book-item:hover {
+    background-color: var(--field-color);
+    border-radius: 10px;
+    border-left: 15px solid transparent;
+}
+
+@media screen and (max-width: 800px) {
+    .todo-book-item-buttons {
+        opacity: 100%;
+    }
+}
+
+.workspace.dragging {
+    outline: 1px solid var(--highlight-color);
+    background-color: var(--highlight-back);
+}
