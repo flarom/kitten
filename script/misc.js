@@ -46,10 +46,10 @@ function randomHighlightColor(hex) {
     return `#${toHex(r2)}${toHex(g2)}${toHex(b2)}`;
 }
 
-function showSnackBar(message) {
+function showSnackBar(message, icon = "") {
     const snackbar = document.createElement("div");
     snackbar.className = "snackbar show";
-    snackbar.textContent = message;
+    snackbar.innerHTML = `<span class='icon' style='font-size:x-large'>${icon}</span><p>${message}</p>`;
 
     document.body.appendChild(snackbar);
 

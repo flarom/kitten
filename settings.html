@@ -114,7 +114,11 @@
         </details>
         <!-- #endregion -->
 
-        <hr>
+        <h2>Notifications</h2>
+        <details name="setting">
+            <summary><span class="center-flex"><span class="large-icon" translate="no">notifications</span>Notifications</span></summary>   
+            <button class="text-button" onclick="askForNotifications()">Ask for notification permission</button>
+        </details>
 
         <h2>Data</h2>
         <!-- #region data -->
@@ -129,8 +133,6 @@
             <button class="danger-button" data-action="clearSettings()" title="Clear settings [hold]">Clear</button>
         </details>
         <!-- #endregion -->
-        
-        <hr>
 
         <h2>TaskGPT</h2>
         <details name="setting">
@@ -144,8 +146,6 @@
             <button class="danger-button" data-action="localStorage.removeItem('kittenGptKey'); location.reload();" title="Clear my API data [hold]">Clear</button>
             <a class="decorated" href="https://platform.openai.com/" target="_blank">OpenAI Plataform</a>
         </details>
-
-        <hr>
 
         <h2>About</h2>
         <!-- #region about -->
@@ -357,6 +357,21 @@
                 removeItem('--wallpaper-blur');
                 removeItem('--wallpaper-brightness');
                 wallpaperInput.value = "";
+            }
+
+            function askForNotifications(){
+                if (!("Notification" in window)) {
+                    showSnackBar("This browser does not support notifications.");
+                    return;
+                }
+                Notification.requestPermission().then((permission) => {
+                    if (permission === "granted") {
+                        new Notification("Notifications will appear here", {
+                            body: "You can disable notifications in your browser settings",
+                            icon: "resource/favicon.png"
+                        });
+                    }
+                });
             }
 
             loadPaletteIntoInputs();

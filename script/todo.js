@@ -164,7 +164,7 @@ let todoBook = {
                     checked: false,
                     subitems: []
                 });
-                showSnackBar("Added item")
+                showSnackBar("Item added", "add_task")
                 save();
                 this.renderTodoBook(filteredLists);
             };
