@@ -50,6 +50,7 @@
 
 input[type="checkbox"] {
     appearance: none;
+    min-width: 18px;
     width: 18px;
     height: 18px;
     border: 1px solid var(--border-color);

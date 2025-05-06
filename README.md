@@ -1,10 +1,8 @@
-<img src="resource/branding/light-full.png" width="300" alt="Kitten Logo">
-
 Kitten is an **accountless**, **free** and **opensource** tasklist manager.
 
 ## Using Kitten
 ### 1. Using online
-To use Kitten online, simply visit [https://flarom.github.io/kitten/](https://flarom.github.io/kitten/).
+To use Kitten online, simply visit <https://flarom.github.io/kitten/>.
 
 ### 2. Using on the desktop
 For now, it's not possible to use kitten on the desktop.
@@ -49,7 +47,3 @@ To create a custom theme for Kitten, follow these steps:
 ```
 Your theme should appear in `Settings > Color Palette > "Select a theme preset"`.
 Please note that you can only easly do this in the desktop version
-
----
-
-Made with ❤️ by [flarom](https://github.com/flarom).

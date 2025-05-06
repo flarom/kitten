@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitten</title>
+    <link rel="stylesheet" href="style/docs.css">
+</head>
+
+<body>
+    <header>
+        <img src="resource/branding/dark-full.png" alt="" width="200px">
+        <button onclick="window.print()">Print this document</button>
+        <button onclick="history.back()" class="noborder">Return</button>
+        <button onclick="window.open('docs.html', '_self')" class="noborder">Index</button>
+    </header>
+    <section id="doc">
+        
+    </section>
+    <footer>
+        <img src="resource/branding/dark-tiny.png" width="45" alt="">
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        async function loadMarkdownFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const filePath = params.get('file');
+            if (!filePath) {
+                document.getElementById('doc').innerHTML = 
+                `
+                <h2>Index</h2>
+                <ul>
+                    <li><a href='docs.html?file=README.md'>README.md</a></li>
+                    <li><a href='docs.html?file=LICENSE.txt'>LICENSE.txt</a></li>
+                    <li><a href='docs.html?file=PRIVACY.md'>PRIVACY.md</a></li>
+                </ul>
+                `;
+                return;
+            }
+
+            try {
+                const response = await fetch(filePath);
+                if (!response.ok) throw new Error("Failed loading file");
+
+                const markdown = await response.text();
+                const html = marked.parse(markdown);
+                document.getElementById('doc').innerHTML = html;
+            } catch (err) {
+                document.getElementById('doc').innerHTML = "<p>Failed loading file</p>";
+            }
+        }
+
+        loadMarkdownFromURL();
+    </script>
+</body>
+
+</html>

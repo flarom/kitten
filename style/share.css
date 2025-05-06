@@ -96,6 +96,7 @@ h1,h2,h3,h4,h5,h6 {
 .create-button {
     background: var(--highlight-back);
     color: var(--highlight-color);
+    min-width: 64px;
     width: 64px;
     height: 64px;
     border-radius: 50%;
@@ -273,4 +274,31 @@ input[type="color"]::-webkit-color-swatch {
         opacity: 0;
     }
 }
+/* #endregion */
+
+/* #region scrollbar */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background: transparent;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--border-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--highlight-back);
+}
+
+* {
+    scrollbar-color: var(--border-color) transparent;
+}
+
 /* #endregion */
