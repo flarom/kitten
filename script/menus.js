@@ -144,6 +144,63 @@ function promptMessage(htmlContent) {
     });
 }
 
+function promptConfirm(message) {
+    return new Promise((resolve) => {
+        // overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'prompt-overlay';
+
+        // dialog
+        const dialog = document.createElement('div');
+        dialog.className = 'prompt-dialog';
+        dialog.style.width = '100%';
+        dialog.style.maxWidth = '400px';
+
+        // message
+        const text = document.createElement('p');
+        text.textContent = message;
+        text.className = 'prompt-title';
+        dialog.appendChild(text);
+
+        // buttons
+        const buttonContainer = document.createElement('div');
+        buttonContainer.className = 'prompt-buttons';
+
+        const yesButton = document.createElement('button');
+        yesButton.textContent = 'Yes';
+        yesButton.className = 'prompt-button submit';
+
+        const noButton = document.createElement('button');
+        noButton.textContent = 'No';
+        noButton.className = 'prompt-button cancel';
+
+        buttonContainer.appendChild(noButton);
+        buttonContainer.appendChild(yesButton);
+        dialog.appendChild(buttonContainer);
+
+        overlay.appendChild(dialog);
+        document.body.appendChild(overlay);
+
+        function closePrompt(result) {
+            document.body.removeChild(overlay);
+            resolve(result);
+        }
+
+        yesButton.addEventListener('click', () => closePrompt(true));
+        noButton.addEventListener('click', () => closePrompt(false));
+
+        overlay.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                closePrompt(true);
+            } else if (event.key === 'Escape') {
+                closePrompt(false);
+            }
+        });
+
+        yesButton.focus();
+    });
+}
+
 //#region list creating
 
 function promptListCreation() {

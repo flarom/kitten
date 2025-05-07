@@ -189,11 +189,11 @@ let todoBook = {
             const deleteBtn = document.createElement("button");
             deleteBtn.classList = "icon-button delete-button";
             deleteBtn.textContent = "delete";
-            deleteBtn.onclick = (e) => {
+            deleteBtn.onclick = async (e) => {
                 e.stopPropagation();
                 const skipConfirmation = e.shiftKey;
             
-                if (skipConfirmation || confirm(`Sure you want to delete "${list.title}"?`)) {
+                if (skipConfirmation || await promptConfirm(`Sure you want to delete "${list.title}"?`)) {
                     this.lists = this.lists.filter(l => l.id !== list.id);
                     save();
                     this.renderTodoBook();
@@ -416,8 +416,8 @@ const todoList = {
             addBtn.textContent = "add";
             addBtn.title = "Add Subitem";
             addBtn.setAttribute("translate", "no");
-            addBtn.onclick = () => {
-                const name = prompt("Sub-item name");
+            addBtn.onclick = async () => {
+                const name = await promptString("Sub-item name");
                 if (name) {
                     const newId = generateUniqueId(item.subitems);
                     item.subitems.push({ id: newId, name, checked: "false", subitems: [] });
@@ -431,8 +431,8 @@ const todoList = {
             editBtn.textContent = "edit";
             editBtn.title = "Edit";
             editBtn.setAttribute("translate", "no");
-            editBtn.onclick = () => {
-                const name = prompt("Novo nome:", item.name);
+            editBtn.onclick = async () => {
+                const name = await promptString("New name:", item.name);
                 if (name !== null) {
                     item.name = name;
                     save();
