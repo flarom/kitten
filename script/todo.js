@@ -626,6 +626,8 @@ function handleSearch() {
     todoBook.renderTodoBook(results);
 }
 
+let canShowConfetti = true;
+let lastValue = 0;
 function updateProgressBar() {
     const pb = document.getElementById('progress-bar');
     const counts = todoList.getStat();
@@ -636,10 +638,21 @@ function updateProgressBar() {
         const percent = (done / total) * 100;
         pb.style.width = `${percent}%`;
         pb.title = `${percent.toFixed(2)}%`;
-        if (percent >= 100 && done >= 10) {
+
+        // shows confetti if :
+        // - confetti wasn't shown in the last 10 secconds
+        // - the last percentage wasn't 100% (so deleting a item in a full list doesn't show confetti)
+        // - there's more than 10 items
+        // - "confetti" setting is true
+        if (canShowConfetti && lastValue != 100 && percent >= 100 && done >= 10 && loadSetting('confetti') === "true") {
             startConfetti();
             setTimeout(stopConfetti, 1000);
+            canShowConfetti = false;
+            setTimeout(() => {
+                canShowConfetti = true;
+            }, 10000);
         }
+        lastValue = percent;
     } else if (pb) {
         pb.style.width = `0%`;
         pb.title = `0%`;

@@ -1,9 +1,9 @@
-function saveItem(name, value) {
+function saveSetting(name, value) {
     localStorage.setItem(name, value);
     applyCSSVariable(name, value);
 }
 
-function loadItem(name) {
+function loadSetting(name) {
     return localStorage.getItem(name);
 }
 
@@ -38,7 +38,7 @@ function applySavedPalette() {
     ];
 
     paletteVars.forEach(name => {
-        const value = loadItem(name);
+        const value = loadSetting(name);
         if (value !== null) {
             applyCSSVariable(name, value);
         }

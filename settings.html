@@ -112,6 +112,17 @@
                 <option value="right">Right</option>
             </select>
         </details>
+
+        <details name="setting">
+            <summary><span class="center-flex"><span class="large-icon" translate="no">celebration</span>Special effects</span></summary>
+            <div class="switch-wrapper">
+                <label class="switch">
+                  <input type="checkbox" id="confetti" onchange="saveAnimations()">
+                  <span class="slider"></span>
+                </label>
+                <span class="switch-text" title="Shows confetti when completing 100% of a list. The animation is gentle, but be aware if you're sensitive to moving visuals.">Confetti</span>
+            </div>
+        </details>
         <!-- #endregion -->
 
         <h2>Notifications</h2>
@@ -234,15 +245,15 @@
                     const theme = await response.json();
 
                     for (const [key, value] of Object.entries(theme.variables)) {
-                        saveItem(key, value);
+                        saveSetting(key, value);
                         document.documentElement.style.setProperty(key, value);
                     }
 
                     const highlightColor = theme.variables['--highlight-color'];
                     const warningColor = theme.variables['--warning-color'];
 
-                    saveItem('--highlight-back', `${highlightColor}44`);
-                    saveItem('--warning-back', `${warningColor}44`);
+                    saveSetting('--highlight-back', `${highlightColor}44`);
+                    saveSetting('--warning-back', `${warningColor}44`);
                     document.documentElement.style.setProperty('--highlight-back', `${highlightColor}44`);
                     document.documentElement.style.setProperty('--warning-back', `${warningColor}44`);
                     loadPaletteIntoInputs();
@@ -252,7 +263,7 @@
             }
 
             function saveColor(property, value) {
-                saveItem(property, value);
+                saveSetting(property, value);
 
                 const colorInput = document.getElementById(property);
                 if (colorInput) {
@@ -283,8 +294,8 @@
                 const highlightColor = document.getElementById('--highlight-color').value;
                 const warningColor = document.getElementById('--warning-color').value;
 
-                saveItem('--highlight-back', `${highlightColor}44`);
-                saveItem('--warning-back', `${warningColor}44`);
+                saveSetting('--highlight-back', `${highlightColor}44`);
+                saveSetting('--warning-back', `${warningColor}44`);
             }
 
             function loadPaletteIntoInputs() {
@@ -301,7 +312,7 @@
                 ];
 
                 colors.forEach(color => {
-                    const savedValue = loadItem(color);
+                    const savedValue = loadSetting(color);
                     const input = document.getElementById(color);
                     if (savedValue) {
                         input.value = savedValue;
@@ -311,12 +322,12 @@
 
             const fontInput = document.getElementById("--font");
             const fontSizeInput = document.getElementById("--font-size");
-            fontInput.value = loadItem('--font');
-            fontSizeInput.value = loadItem('--font-size');
+            fontInput.value = loadSetting('--font');
+            fontSizeInput.value = loadSetting('--font-size');
 
             function saveFont() {
-                saveItem('--font', fontInput.value);
-                saveItem('--font-size', fontSizeInput.value);
+                saveSetting('--font', fontInput.value);
+                saveSetting('--font-size', fontSizeInput.value);
             }
 
             function resetFont() {
@@ -327,30 +338,30 @@
             }
 
             const wallpaperInput = document.getElementById("--wallpaper");
-            let storedWallpaper = loadItem('--wallpaper');
+            let storedWallpaper = loadSetting('--wallpaper');
             if (storedWallpaper?.startsWith("url('") && storedWallpaper.endsWith("')")) {
                 storedWallpaper = storedWallpaper.slice(5, -2);
             }
             wallpaperInput.value = storedWallpaper || "";
 
             const wallpaperBlurInput = document.getElementById("--wallpaper-blur");
-            let storedWallpaperBlur = loadItem('--wallpaper-blur');
+            let storedWallpaperBlur = loadSetting('--wallpaper-blur');
             if (storedWallpaperBlur?.endsWith("px")) {
                 storedWallpaperBlur = storedWallpaperBlur.slice(0, -2);
             }
             wallpaperBlurInput.value = storedWallpaperBlur || 0;
 
             const wallpaperBrightnessInput = document.getElementById("--wallpaper-brightness");
-            wallpaperBrightnessInput.value = loadItem('--wallpaper-brightness');
+            wallpaperBrightnessInput.value = loadSetting('--wallpaper-brightness');
 
             const wallpaperPositionInput = document.getElementById('--wallpaper-position');
-            wallpaperPositionInput.value = loadItem('--wallpaper-position');
+            wallpaperPositionInput.value = loadSetting('--wallpaper-position');
 
             function saveWallpaper() {
-                saveItem('--wallpaper', `url('${wallpaperInput.value}')`);
-                saveItem('--wallpaper-blur', `${wallpaperBlurInput.value}px`);
-                saveItem('--wallpaper-brightness', wallpaperBrightnessInput.value);
-                saveItem('--wallpaper-position', wallpaperPositionInput.value);
+                saveSetting('--wallpaper', `url('${wallpaperInput.value}')`);
+                saveSetting('--wallpaper-blur', `${wallpaperBlurInput.value}px`);
+                saveSetting('--wallpaper-brightness', wallpaperBrightnessInput.value);
+                saveSetting('--wallpaper-position', wallpaperPositionInput.value);
             }
 
             function resetWallpaper() {
@@ -358,6 +369,12 @@
                 removeItem('--wallpaper-blur');
                 removeItem('--wallpaper-brightness');
                 wallpaperInput.value = "";
+            }
+            
+            const confettiInput = document.getElementById('confetti');
+            confettiInput.checked = loadSetting('confetti') === "true";
+            function saveAnimations() {
+                saveSetting('confetti', confettiInput.checked);
             }
 
             function askForNotifications(){
