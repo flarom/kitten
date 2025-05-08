@@ -10,10 +10,11 @@ body {
     background-size: cover;
     background-position: var(--wallpaper-position);
     background-attachment: fixed;
-    animation: fade-in 1s;
 
     font-size: calc(1em * var(--font-size));
     margin: 0px;
+
+    animation: fade-in 1s;
 }
 body::before {
     content: "";
@@ -28,6 +29,15 @@ body::before {
     background-attachment: inherit;
     filter: blur(var(--wallpaper-blur)) brightness(var(--wallpaper-brightness)) ;
     z-index: -1;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0%;
+    }
+    to {
+        opacity: 100%;
+    }
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -106,6 +116,14 @@ h1,h2,h3,h4,h5,h6 {
 
 .create-button:hover {
     box-shadow: 0px 0px 0px 15px var(--highlight-back);
+}
+
+.add-button:hover {
+    animation: rotate-text 0.5s ease-in-out forwards;
+}
+
+.edit-button:hover{
+    animation: pencil-rotate 0.8s ease-in-out forwards;
 }
 
 .delete-button:hover {
@@ -247,11 +265,10 @@ input[type="color"]::-webkit-color-swatch {
 
 .snackbar.show {
     visibility: visible;
-    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-    animation: fadein 0.5s, fadeout 0.5s 2.5s forwards;
+    animation: sb-fadein 0.5s, sb-fadeout 0.5s 2.5s forwards;
 }
 
-@keyframes fadein {
+@keyframes sb-fadein {
     from {
         top: 0;
         opacity: 0;
@@ -263,7 +280,7 @@ input[type="color"]::-webkit-color-swatch {
     }
 }
 
-@keyframes fadeout {
+@keyframes sb-fadeout {
     from {
         top: 30px;
         opacity: 1;
@@ -302,3 +319,16 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 /* #endregion */
+
+@keyframes pencil-rotate {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(-15deg); }
+    50% { transform: rotate(15deg); }
+    75% { transform: rotate(-10deg); }
+    100% { transform: rotate(0deg); }
+}
+
+@keyframes rotate-text {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

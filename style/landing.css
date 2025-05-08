@@ -67,6 +67,7 @@ body {
     margin-top: 10px;
     border: 2px solid var(--highlight-color);
     transition: 2s transform;
+	box-shadow: 10px 10px 0px var(--highlight-back);
 }
 
 @keyframes float-rotate {

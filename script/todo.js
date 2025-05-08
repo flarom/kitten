@@ -137,12 +137,23 @@ let todoBook = {
             const done = items.filter(item => item.checked === true || item.checked === "true").length;
             const percent = total > 0 ? (done / total) * 100 : 0;
 
-            titleDiv.innerHTML = `
-                <h3 translate="no">${list.title.trim() === "" ? "<i>Untitled</i>" : list.title}</h3>
-                <div class="progress-wrapper">
-                    <div class="progress-bar" style="width: ${percent}%; background-color: ${list.color};" title="${percent.toFixed(2)}% (${done}/${total})"></div>
-                </div>
-            `;
+            const h3 = document.createElement("h3");
+            h3.setAttribute("translate", "no");
+            h3.textContent = list.title.trim() === "" ? "Untitled" : list.title;
+
+            const progressWrapper = document.createElement("div");
+            progressWrapper.className = "progress-wrapper";
+
+            const progressBar = document.createElement("div");
+            progressBar.className = "progress-bar";
+            progressBar.style.width = `${percent}%`;
+            progressBar.style.backgroundColor = list.color;
+            progressBar.title = `${percent.toFixed(2)}% (${done}/${total})`;
+
+            progressWrapper.appendChild(progressBar);
+
+            titleDiv.appendChild(h3);
+            titleDiv.appendChild(progressWrapper);
     
             const btnDiv = document.createElement("div");
             btnDiv.className = "todo-book-item-buttons";
@@ -171,7 +182,7 @@ let todoBook = {
             btnDiv.appendChild(addBtn);
     
             const editBtn = document.createElement("button");
-            editBtn.className = "icon-button";
+            editBtn.className = "icon-button edit-button";
             editBtn.textContent = "edit";
             editBtn.onclick = async (e) => {
                 e.stopPropagation();
@@ -197,6 +208,7 @@ let todoBook = {
                     this.lists = this.lists.filter(l => l.id !== list.id);
                     save();
                     this.renderTodoBook();
+                    showSnackBar("Item deleted", "delete");
                 }
             };
     
@@ -412,7 +424,7 @@ const todoList = {
             buttonDiv.className = "button-div";
     
             const addBtn = document.createElement("button");
-            addBtn.className = "icon-button add-subitem-button";
+            addBtn.className = "icon-button add-button";
             addBtn.textContent = "add";
             addBtn.title = "Add Subitem";
             addBtn.setAttribute("translate", "no");
@@ -624,6 +636,10 @@ function updateProgressBar() {
         const percent = (done / total) * 100;
         pb.style.width = `${percent}%`;
         pb.title = `${percent.toFixed(2)}%`;
+        if (percent >= 100 && done >= 10) {
+            startConfetti();
+            setTimeout(stopConfetti, 1000);
+        }
     } else if (pb) {
         pb.style.width = `0%`;
         pb.title = `0%`;
