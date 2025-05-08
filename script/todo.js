@@ -370,6 +370,22 @@ const todoList = {
         save();
     },
 
+    deleteFirstItem: function() {
+        if (todoList.items.length > 0) {
+            todoList.items.shift();
+            save();
+            todoList.renderList();
+        }
+    },
+    
+    deleteLastItem: function() {
+        if (todoList.items.length > 0) {
+            todoList.items.pop();
+            save();
+            todoList.renderList();
+        }
+    },
+
     renderList: function() {
         const container = document.getElementById("todoList");
         if (!container) return;

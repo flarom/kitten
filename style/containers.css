@@ -161,3 +161,25 @@ kbd {
     user-select: none;
     line-height: 1;
 }
+
+kbd[data-key="F1"],
+kbd[data-key="F2"],
+kbd[data-key="F3"],
+kbd[data-key="F4"],
+kbd[data-key="F5"],
+kbd[data-key="F6"],
+kbd[data-key="F7"],
+kbd[data-key="F8"],
+kbd[data-key="F9"],
+kbd[data-key="F10"],
+kbd[data-key="F11"],
+kbd[data-key="F12"],
+kbd[data-key="Ctrl"],
+kbd[data-key="Alt"],
+kbd[data-key="Shift"],
+kbd[data-key="Spr"],
+kbd[data-key="Super"] {
+    background-color: var(--highlight-back);
+    border-color: var(--highlight-color);
+    box-shadow: inset 0 -2px 0 var(--highlight-color);
+}
