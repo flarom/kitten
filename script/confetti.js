@@ -1,3 +1,6 @@
+// author: mathusummut
+// https://github.com/mathusummut/confetti.js
+
 var maxParticleCount = 150; //set max confetti count
 var particleSpeed = 2; //set the particle animation speed
 var startConfetti; //call to start confetti animation
@@ -10,14 +13,13 @@ var removeConfetti; //call to stop the confetti animation and remove all confett
 	stopConfetti = stopConfettiInner;
 	toggleConfetti = toggleConfettiInner;
 	removeConfetti = removeConfettiInner;
-	var colors = ["DodgerBlue", "OliveDrab", "Gold", "Pink", "SlateBlue", "LightBlue", "Violet", "PaleGreen", "SteelBlue", "SandyBrown", "Chocolate", "Crimson"]
 	var streamingConfetti = false;
 	var animationTimer = null;
 	var particles = [];
 	var waveAngle = 0;
 	
 	function resetParticle(particle, width, height) {
-		particle.color = colors[(Math.random() * colors.length) | 0];
+		particle.color = randomHighlightColor(getCSSVariableValue('--highlight-color'));//colors[(Math.random() * colors.length) | 0];
 		particle.x = Math.random() * width;
 		particle.y = Math.random() * height - height;
 		particle.diameter = Math.random() * 10 + 5;
