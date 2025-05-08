@@ -1,11 +1,39 @@
 Kitten is an **accountless**, **free** and **opensource** tasklist manager.
 
 ## Using Kitten
-### 1. Using online
+### Get Kitten
+#### Using online
 To use Kitten online, simply visit <https://flarom.github.io/kitten/>.
 
-### 2. Using on the desktop
+#### Using on the desktop
 For now, it's not possible to use kitten on the desktop.
+### Keyboard shortcuts
+#### Home
+<table>
+    <tr><th>Shortcut</th>                                                   <th>Action</th></tr>
+    <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="S">S</kbd></td>  <td>Save file as .cat</td></tr>
+    <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="O">O</kbd></td>  <td>Open .cat document</td></tr>
+    <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="K">K</kbd></td>  <td>Add new item</td></tr>
+    <tr><td><kbd data-key="Alt">Alt</kbd>+<kbd data-key="K">K</kbd></td>    <td>Add new item without name prompt</td></tr>
+    <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="/">/</kbd></td>  <td>Show shortcuts</td></tr>
+    <tr><td><kbd data-key="F2">F2</kbd></td>                                <td>Search</td></tr>
+</table>
+
+#### List
+<table>
+    <tr><th>Shortcut</th>                                                       <th>Action</th></tr>
+    <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="S">S</kbd></td>      <td>Save file as .cat</td></tr>
+    <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="K">K</kbd></td>      <td>Add new item</td></tr>
+    <tr><td><kbd data-key="Alt">Alt</kbd>+<kbd data-key="K">K</kbd></td>        <td>Add new item without name prompt</td></tr>
+    <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="/">/</kbd></td>      <td>Show shortcuts</td></tr>
+    <tr><td><kbd data-key="F2">F2</kbd></td>                                    <td>Rename list</td></tr>
+    <tr><td><kbd data-key="Del">Del</kbd></td>                                  <td>Delete last item</td></tr>
+    <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="Del">Del</kbd></td>  <td>Delete first item</td></tr>
+    <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="I">I</kbd></td>      <td>Order list alphabeticaly</td></tr>
+    <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="U">U</kbd></td>      <td>Move checked items to the top</td></tr>
+    <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="Y">Y</kbd></td>      <td>Move checked items to the bottom</td></tr>
+    <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="H">H</kbd></td>      <td>Return home</td></tr>
+</table>
 
 ## Creating with Kitten
 With Kitten, you can create:
