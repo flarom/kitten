@@ -93,6 +93,7 @@
         updateTitle();
 
         const workspace = document.querySelector(".workspace");
+        let lastFilteredLists = null;
 
         workspace.addEventListener("dragover", (e) => {
             e.preventDefault();
@@ -137,7 +138,7 @@
         });
 
         document.addEventListener("keydown", function (event) {
-            if (event.ctrlKey && event.key === "k") { // Ctrl + K - add new item
+            if (event.ctrlKey && event.key === "k" || event.key === "Insert") { // Ctrl + K - add new item
                 event.preventDefault();
                 createList();
             }
@@ -164,19 +165,30 @@
                 event.preventDefault();
                 showShortcuts();
             }
+            else if (event.altKey && /^[0-9]$/.test(event.key)) {
+            event.preventDefault();
+            const index = (event.key === "0") ? 9 : parseInt(event.key) - 1;
+            const targetLists = lastFilteredLists ?? todoBook.lists;
+                    
+            if (targetLists[index]) {
+                const listId = targetLists[index].id;
+                window.open(`list.html?list=${listId}`, '_self');
+            }
+        }
         });
 
         async function showShortcuts(){
             promptMessage(`
             <h2 style='display:flex;align-items:center;gap:10px'><span class="large-icon">keyboard_keys</span>Keyboard Shortcuts</h2>
             <table>
-                <tr><th>Shortcut</th>                                                   <th>Action</th></tr>
-                <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="S">S</kbd></td>  <td>Save file as .cat</td></tr>
-                <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="O">O</kbd></td>  <td>Open .cat document</td></tr>
-                <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="K">K</kbd></td>  <td>Add new item</td></tr>
-                <tr><td><kbd data-key="Alt">Alt</kbd>+<kbd data-key="K">K</kbd></td>    <td>Add new item without name prompt</td></tr>
-                <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="/">/</kbd></td>  <td>Show shortcuts</td></tr>
-                <tr><td><kbd data-key="F2">F2</kbd></td>                                <td>Search</td></tr>
+                <tr><th>Shortcut</th>                                                                           <th>Action</th></tr>
+                <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="S">S</kbd></td>                          <td>Save file as .cat</td></tr>
+                <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="O">O</kbd></td>                          <td>Open .cat document</td></tr>
+                <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="K">K</kbd></td>                          <td>Add new item</td></tr>
+                <tr><td><kbd data-key="Alt">Alt</kbd>+<kbd data-key="K">K</kbd></td>                            <td>Add new item without name prompt</td></tr>
+                <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="/">/</kbd></td>                          <td>Show shortcuts</td></tr>
+                <tr><td><kbd data-key="F2">F2</kbd></td>                                                        <td>Search</td></tr>
+                <tr><td><kbd data-key="Alt">Alt</kbd>+<kbd data-key="1">1</kbd>-<kbd data-key="0">0</kbd></td>  <td>Open search result</td></tr>
             </table>
             `);
         }

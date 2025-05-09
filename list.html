@@ -123,7 +123,7 @@
         });
 
         document.addEventListener("keydown", function (event) {
-            if (event.ctrlKey && event.key === "k") { // Ctrl + K - add new item
+            if (event.ctrlKey && event.key === "k" || event.key === "Insert") { // Ctrl + K - add new item
                 event.preventDefault();
                 createItem();
             }
@@ -163,7 +163,11 @@
             else if (event.ctrlKey && event.key ==="y"){
                 event.preventDefault();
                 moveCheckedItemsToEnd();
-            }                        
+            }
+            else if (event.altKey && event.key === "h"){
+                event.preventDefault();
+                window.open('index.html', '_self');
+            }               
         });
 
         async function showShortcuts(){
@@ -181,7 +185,7 @@
                 <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="I">I</kbd></td>      <td>Order list alphabeticaly</td></tr>
                 <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="U">U</kbd></td>      <td>Move checked items to the top</td></tr>
                 <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="Y">Y</kbd></td>      <td>Move checked items to the bottom</td></tr>
-                <tr><td><kbd data-key="Ctrl">Ctrl</kbd>+<kbd data-key="H">H</kbd></td>      <td>Return home</td></tr>
+                <tr><td><kbd data-key="Alt">Alt</kbd>+<kbd data-key="H">H</kbd></td>        <td>Return home</td></tr>
             </table>
             `);
         }

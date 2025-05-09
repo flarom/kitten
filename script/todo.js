@@ -197,13 +197,29 @@ let todoBook = {
             btnDiv.appendChild(editBtn);
 
     
-            const deleteBtn = document.createElement("button");
-            deleteBtn.classList = "icon-button delete-button";
-            deleteBtn.textContent = "delete";
-            deleteBtn.onclick = async (e) => {
+            const menuWrapper = document.createElement("div");
+            menuWrapper.className = "dropdown";
+
+            const menuBtn = document.createElement("button");
+            menuBtn.className = "icon-button dropdown-btn";
+            menuBtn.setAttribute("translate", "no");
+            menuBtn.textContent = "more_vert";
+            menuBtn.onclick = (e) => {
+                e.stopPropagation();
+                toggleDropdown(`list-menu-${list.id}`);
+            };
+
+            const menuContent = document.createElement("div");
+            menuContent.className = "dropdown-content menu";
+            menuContent.id = `list-menu-${list.id}`;
+
+            const deleteButton = document.createElement("button");
+            deleteButton.className = "text-button";
+            deleteButton.innerHTML = `<span class="icon" translate="no">delete</span>Delete`;
+
+            deleteButton.onclick = async (e) => {
                 e.stopPropagation();
                 const skipConfirmation = e.shiftKey;
-            
                 if (skipConfirmation || await promptConfirm(`Sure you want to delete "${list.title}"?`)) {
                     this.lists = this.lists.filter(l => l.id !== list.id);
                     save();
@@ -211,9 +227,15 @@ let todoBook = {
                     showSnackBar("Item deleted", "delete");
                 }
             };
-    
+
+            menuContent.appendChild(deleteButton);
+            
+
+            menuWrapper.appendChild(menuBtn);
+            menuWrapper.appendChild(menuContent);
+            
             btnDiv.appendChild(editBtn);
-            btnDiv.appendChild(deleteBtn);
+            btnDiv.appendChild(menuWrapper);
     
             listDiv.appendChild(titleDiv);
             listDiv.appendChild(btnDiv);
@@ -633,13 +655,19 @@ function generateUniqueId(items) {
 }
 
 function handleSearch() {
-    const query = document.getElementById("search-input").value.trim().toLowerCase();
+    const query = document.getElementById("search-input").value.toLowerCase().trim();
+    if (!query) {
+        lastFilteredLists = null;
+        todoBook.renderTodoBook();
+        return;
+    }
 
-    const results = query === ""
-        ? todoBook.lists
-        : todoBook.lists.filter(list => list.title.toLowerCase().includes(query));
+    const filtered = todoBook.lists.filter(list =>
+        list.title.toLowerCase().includes(query)
+    );
 
-    todoBook.renderTodoBook(results);
+    lastFilteredLists = filtered;
+    todoBook.renderTodoBook(filtered);
 }
 
 let canShowConfetti = true;
@@ -660,7 +688,7 @@ function updateProgressBar() {
         // - the last percentage wasn't 100% (so deleting a item in a full list doesn't show confetti)
         // - there's more than 10 items
         // - "confetti" setting is true
-        if (canShowConfetti && lastValue != 100 && percent >= 100 && done >= 10 && loadSetting('confetti') === "true") {
+        if (canShowConfetti && lastValue != 100 && percent >= 100 && done >= 10 && loadSetting('confetti', true) === "true") {
             startConfetti();
             setTimeout(stopConfetti, 1000);
             canShowConfetti = false;

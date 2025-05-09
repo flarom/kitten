@@ -3,8 +3,13 @@ function saveSetting(name, value) {
     applyCSSVariable(name, value);
 }
 
-function loadSetting(name) {
-    return localStorage.getItem(name);
+function loadSetting(name, throwback = null) {
+    const value = localStorage.getItem(name);
+    return value !== null ? value : throwback;
+}
+
+function settingExists(name) {
+    return localStorage.getItem(name) !== null;
 }
 
 function applyCSSVariable(name, value) {
