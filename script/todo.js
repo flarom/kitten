@@ -45,7 +45,7 @@ let todoBook = {
     importBook: function(rewrite = false) {
         const input = document.createElement("input");
         input.type = "file";
-        input.accept = ".cat";
+        input.accept = ".cat,.json";
         input.onchange = e => {
             const file = e.target.files[0];
             if (!file) return;
@@ -70,7 +70,7 @@ let todoBook = {
                     save();
                     this.renderTodoBook();
                 } catch (e) {
-                    console.error("invalid file");
+                    showSnackBar('Invalid file','error')
                 }
             };
             reader.readAsText(file);

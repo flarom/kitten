@@ -61,6 +61,6 @@
 }
 
 .workspace.dragging {
-    outline: 1px solid var(--highlight-color);
+    border: 1px solid var(--highlight-color);
     background-color: var(--highlight-back);
 }

@@ -7,9 +7,9 @@
         "--field-color": "#1a1a1a",
         "--border-color": "#1f1f1f",
         "--text-color": "#e0e0e0",
-        "--icon-color": "#00ffcc",
-        "--title-color": "#00ffaa",
-        "--highlight-color": "#00ff88",
+        "--icon-color": "#3399ff",
+        "--title-color": "#3399ff",
+        "--highlight-color": "#3399ff",
         "--warning-color": "#ff4444"
     }
 }

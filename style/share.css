@@ -57,7 +57,7 @@ h1,h2,h3,h4,h5,h6 {
     width: calc(100% - 40px);
     height: calc(100% - 50px);
     max-width: 800px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, border 0.3s;
 }
 
 .document {

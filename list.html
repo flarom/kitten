@@ -22,7 +22,7 @@
             <button class="icon-button" onclick="window.open('index.html', '_self')">arrow_back</button>
             <input type="text" id="list-title-input" placeholder="Tasklist title" class="title-box" oninput="updateTitle()">
             <div class="dropdown">
-                <button class="icon-button dropdown-btn" onclick="toggleDropdown('file-menu')" translate="no">more_vert</button>
+                <button class="icon-button dropdown-btn" onclick="toggleDropdown('file-menu')" translate="no">more_horiz</button>
                 <div class="dropdown-content menu" id="file-menu">
                     <button class="text-button" onclick="exportAsTodoBookFile(todoList, todoList.title || 'list')"><span class="icon" translate="no">save</span>Save file <kbd>Ctrl+S</kbd></button>
                     <hr>
@@ -50,10 +50,10 @@
 
             const params = new URLSearchParams(window.location.search);
             const listId = params.get("list");
-            if (!listId) return;
+            if (!listId) {window.open('index.html', '_self'); return;}
             
             const list = todoBook.lists.find(l => l.id === listId);
-            if (!list) return;
+            if (!list) {window.open('index.html', '_self'); return;}
             todoList.id = list.id;
             todoList.title = list.title;
             todoList.color = list.color;

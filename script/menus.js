@@ -68,7 +68,7 @@ function promptString(title, defaultText="") {
         cancelButton.className = 'prompt-button cancel';
 
         const submitButton = document.createElement('button');
-        submitButton.textContent = 'Submit';
+        submitButton.textContent = 'Ok';
         submitButton.className = 'prompt-button submit';
 
         buttonContainer.appendChild(cancelButton);
@@ -254,9 +254,9 @@ function promptListCreation() {
         aiBtn.textContent = "Generate";
         aiBtn.className = "prompt-button";
 
-        buttonContainer.appendChild(createBtn);
-        buttonContainer.appendChild(aiBtn);
         buttonContainer.appendChild(cancelBtn);
+        buttonContainer.appendChild(aiBtn);
+        buttonContainer.appendChild(createBtn);
         dialog.appendChild(buttonContainer);
 
         overlay.appendChild(dialog);
@@ -336,8 +336,8 @@ function promptListUpdate(title = "", color = "#50d3ff") {
         saveBtn.textContent = "Save";
         saveBtn.className = "prompt-button submit";
 
-        buttonContainer.appendChild(saveBtn);
         buttonContainer.appendChild(cancelBtn);
+        buttonContainer.appendChild(saveBtn);
         dialog.appendChild(buttonContainer);
 
         overlay.appendChild(dialog);

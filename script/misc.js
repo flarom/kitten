@@ -50,6 +50,10 @@ function showSnackBar(message, icon = "") {
     const snackbar = document.createElement("div");
     snackbar.className = "snackbar show";
     snackbar.innerHTML = `<span class='icon' style='font-size:x-large'>${icon}</span><p>${message}</p>`;
+    if (icon == "error" || icon == "warning"){ 
+        snackbar.style.borderColor = "var(--warning-color)";
+        snackbar.style.color = "var(--warning-color)";
+    }
 
     document.body.appendChild(snackbar);
 
